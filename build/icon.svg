@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 48 48">
+  <defs>
+    <linearGradient id="cinevra-stroke" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="52%" stop-color="#7c5cff"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <radialGradient id="cinevra-bg" cx="50%" cy="32%" r="78%">
+      <stop offset="0%" stop-color="#1a1433"/>
+      <stop offset="58%" stop-color="#0d0b17"/>
+      <stop offset="100%" stop-color="#07070b"/>
+    </radialGradient>
+    <radialGradient id="cinevra-glow" cx="50%" cy="42%" r="60%">
+      <stop offset="0%" stop-color="#7c5cff" stop-opacity="0.46"/>
+      <stop offset="100%" stop-color="#7c5cff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="1" y="1" width="46" height="46" rx="13" fill="url(#cinevra-bg)"/>
+  <rect x="1" y="1" width="46" height="46" rx="13" fill="none" stroke="#ffffff" stroke-opacity="0.12"/>
+  <circle cx="24" cy="24" r="17" fill="url(#cinevra-glow)"/>
+  <path d="M34 15.3a14 14 0 1 0 0 17.4" fill="none" stroke="url(#cinevra-stroke)" stroke-width="5.6" stroke-linecap="round"/>
+  <path d="M21 17.6 32.4 24 21 30.4V17.6Z" fill="#ffffff"/>
+</svg>
