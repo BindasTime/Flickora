@@ -443,12 +443,9 @@ export function buildEmbedUrl(
     type === 'movie' ? `/embed/movie/${id}` : `/embed/tv/${id}/${options.season ?? 1}/${options.episode ?? 1}`,
     'https://embed.vidrift.net',
   );
-  if (options.title) url.searchParams.set('title', options.title);
-  if (options.branding !== false) {
-    url.searchParams.set('brand', 'HaseebFlix');
-    url.searchParams.set('brandColor', 'e50914');
-    url.searchParams.set('showTitle', '1');
-  }
+  // Do NOT pass title, showTitle, brand, or exit to VidRift!
+  // This prevents VidRift from drawing a duplicate in-player title header or duplicate back button,
+  // leaving our app's native Material 3 top bar in full, glitch-free control.
   return url.toString();
 }
 

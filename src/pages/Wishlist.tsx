@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
+  Bookmark,
   Heart,
   LayoutGrid,
   List,
@@ -82,9 +83,9 @@ export function Wishlist() {
       <header className="page-head">
         <div className="page-head-main">
           <span className="eyebrow">
-            <Heart size={13} /> Your library
+            <Bookmark size={13} /> Your library
           </span>
-          <h1 className="page-title">Wishlist</h1>
+          <h1 className="page-title">My List</h1>
           <p className="page-sub">
             {wishlist.length
               ? `${wishlist.length} saved title${wishlist.length === 1 ? '' : 's'} for later.`
@@ -100,9 +101,9 @@ export function Wishlist() {
 
       {wishlist.length === 0 ? (
         <EmptyState
-          icon={<Heart size={28} />}
-          title="Your wishlist is empty"
-          message="Tap the heart on any poster to keep it here for movie night."
+          icon={<Bookmark size={28} />}
+          title="Your list is empty"
+          message="Tap the bookmark on any poster or details screen to save it here for later."
           action={
             <div className="state-actions">
               <Link className="button primary" to="/movies">

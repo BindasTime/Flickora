@@ -1,12 +1,12 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Settings, WifiOff } from 'lucide-react';
-import { BrandMark, Wordmark } from './Brand';
+import { ArrowLeft, Bell, Search, Settings, User, WifiOff } from 'lucide-react';
+import { BrandMark } from './Brand';
 import { useApp } from '../state/AppState';
 
 export function MobileHeader() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { offline } = useApp();
+  const { offline, wishlist } = useApp();
 
   const isSubPage =
     location.pathname.startsWith('/title/') ||
@@ -42,8 +42,11 @@ export function MobileHeader() {
           </div>
         ) : (
           <div className="mobile-brand-wrap" onClick={() => navigate('/')}>
-            <BrandMark size={28} />
-            <Wordmark compact />
+            <BrandMark size={32} />
+            <div className="mobile-brand-copy">
+              <span className="brand-title">HaseebFlix</span>
+              <span className="brand-subtitle">OTT Platform</span>
+            </div>
           </div>
         )}
       </div>
@@ -54,15 +57,47 @@ export function MobileHeader() {
             <WifiOff size={13} />
           </span>
         )}
-        {location.pathname !== '/settings' && (
-          <button
-            type="button"
-            className="mobile-icon-btn"
-            onClick={() => navigate('/settings')}
-            aria-label="Settings"
-          >
-            <Settings size={20} />
-          </button>
+        {!isSubPage ? (
+          <>
+            <button
+              type="button"
+              className="mobile-icon-btn"
+              onClick={() => navigate('/search')}
+              aria-label="Search"
+            >
+              <Search size={19} />
+            </button>
+            <button
+              type="button"
+              className="mobile-icon-btn notif-btn"
+              onClick={() => navigate('/wishlist')}
+              aria-label="My List"
+            >
+              <Bell size={19} />
+              {wishlist.length > 0 && <span className="notif-dot" />}
+            </button>
+            <button
+              type="button"
+              className="mobile-avatar-btn"
+              onClick={() => navigate('/settings')}
+              aria-label="Profile"
+            >
+              <div className="mobile-avatar-inner">
+                <User size={17} />
+              </div>
+            </button>
+          </>
+        ) : (
+          location.pathname !== '/settings' && (
+            <button
+              type="button"
+              className="mobile-icon-btn"
+              onClick={() => navigate('/settings')}
+              aria-label="Settings"
+            >
+              <Settings size={20} />
+            </button>
+          )
         )}
       </div>
     </header>

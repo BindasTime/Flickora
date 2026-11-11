@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   ArrowLeft,
+  Bookmark,
   Calendar,
   Check,
   ChevronRight,
@@ -384,8 +385,8 @@ export function Details() {
                   className={`button glass details-sec-btn${wished ? ' wished' : ''}`}
                   onClick={() => toggleWishlist(details)}
                 >
-                  {wished ? <Check size={16} /> : <Heart size={16} />}
-                  {wished ? 'Wishlisted' : 'Wishlist'}
+                  {wished ? <Check size={16} /> : <Bookmark size={16} />}
+                  {wished ? 'In My List' : 'My List'}
                 </button>
                 {featuredTrailer && (
                   <button type="button" className="button glass details-sec-btn" onClick={() => openTrailer()}>
@@ -756,7 +757,7 @@ export function Details() {
             </div>
 
             <p className="download-intro">
-              Keep the artwork and metadata for this title on your computer.
+              Keep the artwork and metadata for this title on your device.
             </p>
 
             <div className="download-options">

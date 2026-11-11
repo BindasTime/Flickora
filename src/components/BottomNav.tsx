@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Film, Heart, Home, Search, Tv } from 'lucide-react';
+import { Bookmark, Compass, Home, Search, Tv } from 'lucide-react';
 import { useApp } from '../state/AppState';
 
 export function BottomNav() {
@@ -25,9 +25,9 @@ export function BottomNav() {
       >
         <div className="bottom-nav-icon-wrap">
           <div className="bottom-nav-indicator" />
-          <Film size={22} strokeWidth={2.2} className="bottom-nav-icon" />
+          <Compass size={22} strokeWidth={2.2} className="bottom-nav-icon" />
         </div>
-        <span className="bottom-nav-label">Movies</span>
+        <span className="bottom-nav-label">Explore</span>
       </NavLink>
 
       <NavLink
@@ -38,7 +38,7 @@ export function BottomNav() {
           <div className="bottom-nav-indicator" />
           <Tv size={22} strokeWidth={2.2} className="bottom-nav-icon" />
         </div>
-        <span className="bottom-nav-label">TV Shows</span>
+        <span className="bottom-nav-label">Live TV</span>
       </NavLink>
 
       <NavLink
@@ -58,12 +58,12 @@ export function BottomNav() {
       >
         <div className="bottom-nav-icon-wrap">
           <div className="bottom-nav-indicator" />
-          <Heart size={22} strokeWidth={2.2} className="bottom-nav-icon" />
+          <Bookmark size={22} strokeWidth={2.2} className="bottom-nav-icon" />
           {wishlist.length > 0 && (
             <span className="bottom-nav-badge">{wishlist.length > 99 ? '99+' : wishlist.length}</span>
           )}
         </div>
-        <span className="bottom-nav-label">Wishlist</span>
+        <span className="bottom-nav-label">My List</span>
       </NavLink>
     </nav>
   );

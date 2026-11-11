@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Info, Play, Star } from 'lucide-react';
+import { Bookmark, Play, Star } from 'lucide-react';
 import type { MediaSummary } from '../lib/types';
 import { backdropUrl } from '../lib/tmdb';
 import { formatScore, yearOf } from '../lib/format';
@@ -49,78 +49,72 @@ export function Hero({ items, loading }: { items: MediaSummary[]; loading?: bool
   };
 
   return (
-    <section
-      className="hero"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <div className="hero-backdrops" aria-hidden="true">
-        {slides.map((slide, slideIndex) => (
-          <div
-            key={slide.id}
-            className={`hero-backdrop${slideIndex === index ? ' visible' : ''}`}
-            style={{
-              backgroundImage: `url(${backdropUrl(slide.backdropPath, 'w1280')})`,
-            }}
-          />
-        ))}
-      </div>
-      <div className="hero-vignette" />
-      <div className="hero-content" key={media.id}>
-        <div className="hero-eyebrow">
-          <span className="pulse-dot" />
-          Trending {media.mediaType === 'movie' ? 'movie' : 'series'} · Today
+    <div className="hero-card-container">
+      <section
+        className="hero hero-m3-card"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        <div className="hero-backdrops" aria-hidden="true">
+          {slides.map((slide, slideIndex) => (
+            <div
+              key={slide.id}
+              className={`hero-backdrop${slideIndex === index ? ' visible' : ''}`}
+              style={{
+                backgroundImage: `url(${backdropUrl(slide.backdropPath, 'w1280')})`,
+              }}
+            />
+          ))}
         </div>
-        <h1 className="hero-title">{media.title}</h1>
-        <div className="hero-meta">
-          {media.voteAverage > 0 && (
-            <span className="hero-score">
-              <Star size={14} fill="currentColor" /> {formatScore(media.voteAverage)}
-              <em>/10</em>
+        <div className="hero-vignette" />
+        <div className="hero-content" key={media.id}>
+          <div className="hero-eyebrow">
+            <span className="hero-brand-tag">
+              <Play size={10} fill="#E50914" strokeWidth={0} /> HaseebFlix Original
             </span>
-          )}
-          {year && <span>{year}</span>}
-          <span>{media.mediaType === 'movie' ? 'Movie' : 'TV Series'}</span>
-          {media.voteCount > 0 && <span>{media.voteCount.toLocaleString()} votes</span>}
+          </div>
+          <h1 className="hero-title">{media.title}</h1>
+          <div className="hero-meta">
+            <span className="hero-chip">{media.mediaType === 'movie' ? 'Movie' : 'Series'}</span>
+            {year && <span className="hero-chip">{year}</span>}
+            {media.voteAverage > 0 && (
+              <span className="hero-chip rating">
+                <Star size={11} fill="currentColor" /> {formatScore(media.voteAverage)}
+              </span>
+            )}
+          </div>
+          <p className="hero-overview">{media.overview || 'A mysterious story of discovery, secrets and excitement.'}</p>
+          <div className="hero-actions">
+            <button type="button" className="button primary hero-watch-btn" onClick={play}>
+              <Play size={16} fill="currentColor" /> Watch Now
+            </button>
+            <button
+              type="button"
+              className={`button glass hero-list-btn${wished ? ' active' : ''}`}
+              onClick={() => toggleWishlist(media)}
+            >
+              <Bookmark size={16} fill={wished ? 'currentColor' : 'none'} />
+              {wished ? 'My List' : 'My List'}
+            </button>
+          </div>
         </div>
-        <p className="hero-overview">{media.overview || 'No overview available yet.'}</p>
-        <div className="hero-actions">
-          <button type="button" className="button primary" onClick={play}>
-            <Play size={17} fill="currentColor" /> Play now
-          </button>
-          <button
-            type="button"
-            className="button glass"
-            onClick={() => navigate(`/title/${media.mediaType}/${media.id}`)}
-          >
-            <Info size={17} /> More info
-          </button>
-          <button
-            type="button"
-            className={`icon-button hero-wish${wished ? ' active' : ''}`}
-            aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
-            onClick={() => toggleWishlist(media)}
-          >
-            <Heart size={18} fill={wished ? 'currentColor' : 'none'} />
-          </button>
-        </div>
-      </div>
 
-      <div className="hero-dots" role="tablist" aria-label="Featured titles">
-        {slides.map((slide, slideIndex) => (
-          <button
-            key={slide.id}
-            type="button"
-            role="tab"
-            aria-selected={slideIndex === index}
-            aria-label={slide.title}
-            className={slideIndex === index ? 'active' : ''}
-            onClick={() => setIndex(slideIndex)}
-          >
-            <span />
-          </button>
-        ))}
-      </div>
-    </section>
+        <div className="hero-dots" role="tablist" aria-label="Featured titles">
+          {slides.map((slide, slideIndex) => (
+            <button
+              key={slide.id}
+              type="button"
+              role="tab"
+              aria-selected={slideIndex === index}
+              aria-label={slide.title}
+              className={slideIndex === index ? 'active' : ''}
+              onClick={() => setIndex(slideIndex)}
+            >
+              <span />
+            </button>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }

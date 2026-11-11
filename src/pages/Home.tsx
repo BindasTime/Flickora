@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { ArrowUpRight, Flame, Sparkles } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { ArrowUpRight, Clapperboard, Flame, Home as HomeIcon, Radio, Smile, Sparkles, Tv } from 'lucide-react';
+import { Link, NavLink } from 'react-router-dom';
 import { Hero } from '../components/Hero';
 import { MediaRow } from '../components/MediaRow';
 import { ContinueCard } from '../components/ContinueCard';
@@ -75,6 +75,24 @@ export function Home() {
 
   return (
     <div className="home">
+      <div className="home-category-bar hide-scrollbar">
+        <NavLink to="/" end className={({ isActive }) => `home-cat-chip${isActive ? ' active' : ''}`}>
+          <HomeIcon size={16} /> Home
+        </NavLink>
+        <NavLink to="/movies" className="home-cat-chip">
+          <Clapperboard size={16} /> Movies
+        </NavLink>
+        <NavLink to="/tv" className="home-cat-chip">
+          <Tv size={16} /> Series
+        </NavLink>
+        <NavLink to="/tv?kind=now_playing" className="home-cat-chip">
+          <Radio size={16} /> Live TV
+        </NavLink>
+        <NavLink to="/movies?genre=10751" className="home-cat-chip">
+          <Smile size={16} /> Kids
+        </NavLink>
+      </div>
+
       <Hero items={heroItems} loading={movieTrending.loading && tvTrending.loading} />
 
       <div className="page-body">

@@ -1,6 +1,8 @@
 /* ==========================================================================
-   HaseebFlix Mobile — Material 3 (Material You) Design System
-   Hardware-Accelerated 60/120fps Smooth Experience
+   HaseebFlix Mobile — Google Material 3 (Material You) Design System
+   Exact Visual Spec: Deep Charcoal #101116, Surface #1C1B22,
+   Primary Soft Purple #CBA6FF, Light Lavender #E6D5FF,
+   Primary Text #F5F1FA, Muted Text #C4C0CA, Outline #49454F
    ========================================================================== */
 
 :root {
@@ -11,42 +13,38 @@
   --safe-right: env(safe-area-inset-right, 0px);
 
   /* Layout Dimensions */
-  --mobile-header-h: 56px;
-  --bottom-nav-h: 74px;
+  --mobile-header-h: 60px;
+  --bottom-nav-h: 76px;
 
-  /* Material 3 Dark Palette */
-  --m3-surface: #0E0D13;
-  --m3-surface-dim: #09080D;
-  --m3-surface-container-lowest: #09080E;
-  --m3-surface-container-low: #131219;
-  --m3-surface-container: #191820;
-  --m3-surface-container-high: #21202A;
-  --m3-surface-container-highest: #2B2A36;
+  /* Material 3 Premium OTT Color Tokens */
+  --m3-bg: #101116;
+  --m3-surface: #1C1B22;
+  --m3-surface-low: #15161C;
+  --m3-surface-high: #24232C;
+  --m3-surface-highest: #2E2D38;
 
-  /* Material 3 Brand & Accents */
-  --m3-primary: #E50914;
-  --m3-primary-container: rgba(229, 9, 20, 0.20);
-  --m3-primary-light: #FF5449;
-  --m3-primary-gradient: linear-gradient(135deg, #E50914 0%, #C40812 100%);
-  --m3-primary-glow: 0 4px 18px rgba(229, 9, 20, 0.38);
+  /* Accent Colors */
+  --m3-primary: #CBA6FF;
+  --m3-primary-light: #E6D5FF;
+  --m3-primary-container: rgba(203, 166, 255, 0.16);
+  --m3-primary-glow: 0 4px 18px rgba(203, 166, 255, 0.35);
 
-  /* Material 3 Typography Colors */
-  --m3-on-surface: #E6E1E5;
-  --m3-on-surface-variant: #CAC4D0;
-  --m3-muted: #8E8B99;
+  /* Text & Typography */
+  --m3-text-primary: #F5F1FA;
+  --m3-text-secondary: #C4C0CA;
+  --m3-text-muted: #8E8A96;
 
-  /* Material 3 Outlines */
-  --m3-outline: rgba(255, 255, 255, 0.10);
-  --m3-outline-variant: rgba(255, 255, 255, 0.05);
+  /* Outlines & Dividers */
+  --m3-outline: #49454F;
+  --m3-outline-subtle: rgba(73, 69, 79, 0.6);
 
   /* Material 3 Motion Curves */
   --m3-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
   --m3-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
-  --m3-easing-accelerate: cubic-bezier(0.3, 0, 1, 1);
 }
 
 /* ==========================================================================
-   Global App Performance & Touch Physics
+   Global App Performance & Base Styles
    ========================================================================== */
 *, *::before, *::after {
   -webkit-tap-highlight-color: transparent !important;
@@ -59,15 +57,15 @@ body, html, #root {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: var(--m3-surface);
-  color: var(--m3-on-surface);
+  background-color: var(--m3-bg);
+  color: var(--m3-text-primary);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   touch-action: manipulation;
 }
 
-/* Base App Shell */
+/* App Shell */
 .mobile-app-shell {
   position: relative;
   display: flex;
@@ -76,10 +74,10 @@ body, html, #root {
   height: 100dvh;
   width: 100%;
   overflow: hidden;
-  background-color: var(--m3-surface);
+  background-color: var(--m3-bg);
 }
 
-/* Main Scroll Area with 60/120Hz Smooth Scrolling */
+/* Smooth 60/120Hz Scroll Area */
 .mobile-main-scroll {
   flex: 1;
   min-height: 0;
@@ -89,7 +87,7 @@ body, html, #root {
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
   overscroll-behavior-y: contain;
-  padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 16px);
+  padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 20px);
   transform: translateZ(0);
 }
 
@@ -101,7 +99,7 @@ body, html, #root {
 }
 
 /* ==========================================================================
-   Material 3 Top App Bar
+   Material 3 Top App Bar (Header from Mockup)
    ========================================================================== */
 .mobile-header {
   position: sticky;
@@ -114,8 +112,8 @@ body, html, #root {
   padding-top: var(--safe-top);
   padding-left: calc(16px + var(--safe-left));
   padding-right: calc(16px + var(--safe-right));
-  background-color: rgba(14, 13, 19, 0.96);
-  border-bottom: 1px solid var(--m3-outline-variant);
+  background-color: var(--m3-bg);
+  border-bottom: 1px solid var(--m3-outline);
   user-select: none;
   transform: translateZ(0);
 }
@@ -127,6 +125,34 @@ body, html, #root {
   min-width: 0;
 }
 
+.mobile-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.mobile-brand-copy {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.mobile-brand-copy .brand-title {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--m3-text-primary);
+  letter-spacing: -0.02em;
+}
+
+.mobile-brand-copy .brand-subtitle {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--m3-text-secondary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .mobile-subpage-header {
   display: flex;
   align-items: center;
@@ -135,58 +161,13 @@ body, html, #root {
 }
 
 .mobile-subpage-title {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
-  color: var(--m3-on-surface);
+  color: var(--m3-text-primary);
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.mobile-brand-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.mobile-brand-wrap .wordmark {
-  display: inline-flex;
-  align-items: center;
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -0.03em;
-}
-
-.mobile-brand-wrap .wordmark-main {
-  color: #FFFFFF;
-}
-
-.mobile-brand-wrap .wordmark-accent {
-  color: var(--m3-primary);
-  margin-left: 2px;
-}
-
-.mobile-back-btn,
-.mobile-icon-btn {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 20px;
-  border: 1px solid var(--m3-outline-variant);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--m3-on-surface);
-  cursor: pointer;
-  transition: background 0.15s, transform 0.12s var(--m3-easing-emphasized);
-}
-
-.mobile-back-btn:active,
-.mobile-icon-btn:active {
-  background: rgba(255, 255, 255, 0.14);
-  transform: scale(0.92);
 }
 
 .mobile-header-right {
@@ -195,219 +176,528 @@ body, html, #root {
   gap: 8px;
 }
 
-.mobile-offline-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
-  font-size: 11px;
-  font-weight: 600;
+.mobile-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid var(--m3-outline);
+  background-color: var(--m3-surface);
+  color: var(--m3-text-primary);
+  cursor: pointer;
+  transition: transform 0.12s var(--m3-easing-emphasized), background 0.15s;
 }
 
-/* ==========================================================================
-   Material 3 Bottom Navigation Bar
-   ========================================================================== */
-.mobile-bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  height: calc(var(--bottom-nav-h) + var(--safe-bottom));
-  padding-bottom: var(--safe-bottom);
-  padding-left: var(--safe-left);
-  padding-right: var(--safe-right);
-  background-color: var(--m3-surface-container-low);
-  border-top: 1px solid var(--m3-outline-variant);
-  user-select: none;
-  transform: translateZ(0);
+.mobile-icon-btn:active {
+  transform: scale(0.92);
+  background-color: var(--m3-surface-high);
 }
 
-.bottom-nav-item {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  flex: 1;
-  height: 100%;
-  color: var(--m3-muted);
-  text-decoration: none;
-  transition: transform 0.15s var(--m3-easing-emphasized);
+.mobile-back-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid var(--m3-outline);
+  background-color: var(--m3-surface);
+  color: var(--m3-text-primary);
+  cursor: pointer;
+  transition: transform 0.12s var(--m3-easing-emphasized);
 }
 
-.bottom-nav-item:active {
+.mobile-back-btn:active {
   transform: scale(0.92);
 }
 
-/* M3 Stadium Pill behind Active Icon */
-.bottom-nav-icon-wrap {
+.notif-btn {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 32px;
 }
 
-.bottom-nav-indicator {
+.notif-dot {
   position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  background: var(--m3-primary-container);
-  opacity: 0;
-  transform: scaleX(0.7);
-  transition: opacity 0.22s var(--m3-easing-emphasized), transform 0.22s var(--m3-easing-emphasized);
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background-color: #FF5449;
+  border: 1.5px solid var(--m3-surface);
 }
 
-.bottom-nav-icon {
-  position: relative;
-  z-index: 2;
-  color: var(--m3-muted);
-  transition: color 0.18s, transform 0.18s var(--m3-easing-emphasized);
+.mobile-avatar-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
-.bottom-nav-label {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.2px;
-  color: var(--m3-muted);
-  transition: color 0.18s, font-weight 0.18s;
-}
-
-/* Active State */
-.bottom-nav-item.active .bottom-nav-indicator {
-  opacity: 1;
-  transform: scaleX(1);
-}
-
-.bottom-nav-item.active .bottom-nav-icon {
-  color: var(--m3-primary-light);
-  transform: scale(1.06);
-}
-
-.bottom-nav-item.active .bottom-nav-label {
-  color: #FFFFFF;
-  font-weight: 600;
-}
-
-.bottom-nav-badge {
-  position: absolute;
-  top: -2px;
-  right: 6px;
-  z-index: 3;
-  min-width: 17px;
-  height: 17px;
-  padding: 0 4px;
-  border-radius: 999px;
-  background: var(--m3-primary);
-  color: #FFFFFF;
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 17px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+.mobile-avatar-inner {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 19px;
+  background: linear-gradient(135deg, #CBA6FF 0%, #E6D5FF 100%);
+  color: #101116;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 /* ==========================================================================
-   Material 3 Chips & Filters
+   Home Horizontal Category Navigation Row (From Mockup)
    ========================================================================== */
-.browse-controls {
-  margin-bottom: 18px;
-}
-
-.chips {
+.home-category-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  padding: 14px 16px 12px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scroll-padding-left: 16px;
-  padding-bottom: 8px;
-  margin-bottom: 12px;
+  scrollbar-width: none;
 }
 
-.chip {
+.home-category-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.home-cat-chip {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  height: 36px;
+  gap: 7px;
+  height: 38px;
   padding: 0 16px;
-  border-radius: 18px;
+  border-radius: 19px;
+  background-color: var(--m3-surface);
   border: 1px solid var(--m3-outline);
-  background: var(--m3-surface-container);
-  color: var(--m3-on-surface-variant);
-  font-size: 13px;
+  color: var(--m3-text-secondary);
+  font-size: 13.5px;
   font-weight: 500;
+  text-decoration: none;
   white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s var(--m3-easing-emphasized);
   flex-shrink: 0;
+  transition: all 0.18s var(--m3-easing-emphasized);
 }
 
-.chip:active {
-  transform: scale(0.95);
+.home-cat-chip:active {
+  transform: scale(0.94);
 }
 
-.chip.active {
-  background: var(--m3-primary-gradient);
-  border-color: transparent;
-  color: #FFFFFF;
-  font-weight: 600;
+.home-cat-chip.active {
+  background-color: var(--m3-primary);
+  border-color: var(--m3-primary);
+  color: #101116;
+  font-weight: 700;
   box-shadow: var(--m3-primary-glow);
 }
 
-.browse-filters {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+/* ==========================================================================
+   Featured Hero Card (From Mockup)
+   ========================================================================== */
+.hero-card-container {
+  padding: 0 16px 18px;
+  width: 100%;
+}
+
+.hero-m3-card {
+  position: relative;
+  width: 100%;
+  height: 420px;
+  max-height: 60vh;
+  border-radius: 24px;
+  overflow: hidden;
+  background-color: var(--m3-surface);
+  border: 1px solid var(--m3-outline);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.hero-backdrops {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-backdrop {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 25%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.hero-backdrop.visible {
+  opacity: 1;
+}
+
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(16, 17, 22, 0.05) 0%, rgba(16, 17, 22, 0.4) 40%, rgba(16, 17, 22, 0.85) 75%, var(--m3-surface) 100%),
+              linear-gradient(90deg, rgba(16, 17, 22, 0.75) 0%, rgba(16, 17, 22, 0.3) 50%, transparent 100%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 20px 18px;
+  pointer-events: none;
+}
+
+.hero-content > * {
+  pointer-events: auto;
+}
+
+.hero-brand-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--m3-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.hero-title {
+  font-size: clamp(24px, 7vw, 32px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--m3-text-primary);
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+
+.hero-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.hero-chip {
+  padding: 3px 8px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--m3-outline);
+  color: var(--m3-text-primary);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.hero-chip.rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background-color: rgba(203, 166, 255, 0.15);
+  border-color: rgba(203, 166, 255, 0.35);
+  color: var(--m3-primary);
+}
+
+.hero-overview {
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--m3-text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0 0 14px;
+  max-width: 90%;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
-.select-field {
-  display: flex;
+.hero-watch-btn {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  height: 40px;
-  padding: 0 14px;
-  border-radius: 20px;
-  background: var(--m3-surface-container);
-  border: 1px solid var(--m3-outline);
-  color: var(--m3-on-surface-variant);
-  font-size: 13px;
-  font-weight: 500;
+  justify-content: center;
+  gap: 6px;
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 21px;
+  background-color: var(--m3-primary) !important;
+  color: #101116 !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  border: none !important;
+  cursor: pointer;
+  box-shadow: var(--m3-primary-glow);
+  transition: transform 0.12s var(--m3-easing-emphasized);
 }
 
-.select-field select {
-  width: 100%;
-  background: transparent;
+.hero-watch-btn:active {
+  transform: scale(0.95);
+}
+
+.hero-list-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 21px;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid var(--m3-outline) !important;
+  color: var(--m3-text-primary) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  cursor: pointer;
+  transition: transform 0.12s var(--m3-easing-emphasized);
+}
+
+.hero-list-btn:active {
+  transform: scale(0.95);
+}
+
+.hero-dots {
+  position: absolute;
+  bottom: 20px;
+  right: 18px;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: auto;
+}
+
+.hero-dots button {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.3);
   border: none;
-  color: var(--m3-on-surface);
-  font-size: 13px;
-  font-weight: 500;
-  outline: none;
+  padding: 0;
+  transition: all 0.22s var(--m3-easing-emphasized);
+  cursor: pointer;
+}
+
+.hero-dots button.active {
+  width: 18px;
+  background: var(--m3-primary);
 }
 
 /* ==========================================================================
-   Material 3 Media Cards & Grid
+   Continue Watching Section (From Mockup)
    ========================================================================== */
-.media-grid {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 14px 10px !important;
-  contain: paint layout;
+.continue-section {
+  margin-bottom: 24px;
 }
 
-@media (max-width: 360px) {
-  .media-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
+.continue-scroller {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 16px;
+  scrollbar-width: none;
+}
+
+.continue-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.continue-card {
+  position: relative;
+  flex: 0 0 220px;
+  width: 220px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: var(--m3-surface);
+  border: 1px solid var(--m3-outline);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  scroll-snap-align: start;
+  transition: transform 0.14s var(--m3-easing-emphasized);
+}
+
+.continue-card:active {
+  transform: scale(0.96);
+}
+
+.continue-link {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.continue-art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: var(--m3-surface-high);
+  overflow: hidden;
+}
+
+.continue-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.continue-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(16, 17, 22, 0.1) 0%, rgba(16, 17, 22, 0.7) 100%);
+}
+
+.continue-play {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  background-color: rgba(16, 17, 22, 0.85);
+  border: 1px solid var(--m3-outline);
+  color: var(--m3-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.continue-body {
+  padding: 8px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.continue-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--m3-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.continue-meta {
+  font-size: 11px;
+  color: var(--m3-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.continue-progress {
+  width: 100%;
+  height: 3.5px;
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.continue-progress span {
+  display: block;
+  height: 100%;
+  background-color: var(--m3-primary);
+  border-radius: 2px;
+}
+
+.continue-percent {
+  display: none;
+}
+
+.continue-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background: rgba(16, 17, 22, 0.75);
+  border: 1px solid var(--m3-outline);
+  color: var(--m3-text-secondary);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   Horizontal Content Rows & Media Cards
+   ========================================================================= */
+.row {
+  margin-bottom: 24px;
+}
+
+.row-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 16px 10px;
+}
+
+.row-head h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--m3-text-primary);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.row-head p {
+  font-size: 11.5px;
+  color: var(--m3-text-secondary);
+  margin: 3px 0 0;
+}
+
+.row-head-actions .row-arrows {
+  display: none !important;
+}
+
+.row-head-actions .see-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--m3-primary);
+  text-decoration: none;
+}
+
+.row-scroller {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 16px;
+  scrollbar-width: none;
+}
+
+.row-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.row-scroller > .media-card {
+  flex: 0 0 134px !important;
+  width: 134px !important;
+  scroll-snap-align: start;
 }
 
 .media-card {
@@ -429,11 +719,11 @@ body, html, #root {
   position: relative;
   width: 100%;
   aspect-ratio: 2 / 3;
-  border-radius: 14px !important;
+  border-radius: 16px !important;
   overflow: hidden;
-  background-color: var(--m3-surface-container-high);
-  border: 1px solid var(--m3-outline-variant);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background-color: var(--m3-surface);
+  border: 1px solid var(--m3-outline);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
 }
 
 .media-card-poster img {
@@ -443,7 +733,6 @@ body, html, #root {
   display: block;
 }
 
-/* Material 3 Floating Rating Chip */
 .media-card-poster .rating-chip {
   position: absolute;
   top: 6px;
@@ -454,12 +743,11 @@ body, html, #root {
   gap: 3px;
   padding: 3px 7px;
   border-radius: 8px;
-  background: rgba(14, 13, 19, 0.84);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #FFFFFF;
+  background-color: rgba(16, 17, 22, 0.85);
+  border: 1px solid var(--m3-outline);
+  color: var(--m3-text-primary);
   font-size: 10.5px;
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .media-card-poster .rating-chip svg {
@@ -472,7 +760,7 @@ body, html, #root {
   left: 0;
   right: 0;
   padding: 24px 8px 8px;
-  background: linear-gradient(0deg, rgba(14, 13, 19, 0.95) 0%, rgba(14, 13, 19, 0.6) 60%, transparent 100%);
+  background: linear-gradient(0deg, var(--m3-surface) 0%, rgba(28, 27, 34, 0.6) 60%, transparent 100%);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -481,7 +769,7 @@ body, html, #root {
 .media-card-poster .poster-title {
   font-size: 11.5px;
   font-weight: 600;
-  color: #FFFFFF;
+  color: var(--m3-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -489,11 +777,132 @@ body, html, #root {
 
 .media-card-poster .poster-meta {
   font-size: 10px;
-  color: var(--m3-muted);
+  color: var(--m3-text-secondary);
+}
+
+/* 3-Column Media Grid for Browse & Wishlist */
+.media-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 14px 10px !important;
+  contain: paint layout;
+}
+
+@media (max-width: 360px) {
+  .media-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
 }
 
 /* ==========================================================================
-   Material 3 Details Page Redesign
+   Material 3 Bottom Navigation Bar (From Mockup)
+   ========================================================================== */
+.mobile-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: calc(var(--bottom-nav-h) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  padding-left: var(--safe-left);
+  padding-right: var(--safe-right);
+  background-color: var(--m3-surface);
+  border-top: 1px solid var(--m3-outline);
+  user-select: none;
+  transform: translateZ(0);
+}
+
+.bottom-nav-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex: 1;
+  height: 100%;
+  color: var(--m3-text-secondary);
+  text-decoration: none;
+  transition: transform 0.15s var(--m3-easing-emphasized);
+}
+
+.bottom-nav-item:active {
+  transform: scale(0.92);
+}
+
+.bottom-nav-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 32px;
+}
+
+.bottom-nav-indicator {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background-color: var(--m3-primary);
+  opacity: 0;
+  transform: scaleX(0.7);
+  transition: opacity 0.22s var(--m3-easing-emphasized), transform 0.22s var(--m3-easing-emphasized);
+}
+
+.bottom-nav-icon {
+  position: relative;
+  z-index: 2;
+  color: var(--m3-text-secondary);
+  transition: color 0.18s, transform 0.18s var(--m3-easing-emphasized);
+}
+
+.bottom-nav-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--m3-text-secondary);
+  transition: color 0.18s, font-weight 0.18s;
+}
+
+/* Active State matches mockup */
+.bottom-nav-item.active .bottom-nav-indicator {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.bottom-nav-item.active .bottom-nav-icon {
+  color: #101116;
+  transform: scale(1.05);
+}
+
+.bottom-nav-item.active .bottom-nav-label {
+  color: var(--m3-text-primary);
+  font-weight: 700;
+}
+
+.bottom-nav-badge {
+  position: absolute;
+  top: -2px;
+  right: 6px;
+  z-index: 3;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background-color: var(--m3-primary);
+  color: #101116;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 17px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* ==========================================================================
+   Material 3 Details Page
    ========================================================================== */
 .details-page {
   position: relative;
@@ -510,11 +919,11 @@ body, html, #root {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background-color: var(--m3-surface);
+  background-color: var(--m3-bg);
   overflow: hidden;
   isolation: isolate;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--m3-outline-variant);
+  border-bottom: 1px solid var(--m3-outline);
 }
 
 .details-backdrop {
@@ -523,14 +932,14 @@ body, html, #root {
   height: 250px;
   background-size: cover;
   background-position: center 20%;
-  background-color: var(--m3-surface-container-high);
+  background-color: var(--m3-surface);
 }
 
 .details-scrim {
   position: absolute;
   inset: 0;
   height: 250px;
-  background: linear-gradient(180deg, rgba(14, 13, 19, 0.1) 0%, rgba(14, 13, 19, 0.65) 60%, var(--m3-surface) 100%);
+  background: linear-gradient(180deg, rgba(16, 17, 22, 0.1) 0%, rgba(16, 17, 22, 0.65) 60%, var(--m3-bg) 100%);
   pointer-events: none;
 }
 
@@ -552,8 +961,9 @@ body, html, #root {
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--m3-outline);
   margin-bottom: 16px;
+  background-color: var(--m3-surface);
 }
 
 .details-poster {
@@ -572,9 +982,9 @@ body, html, #root {
   gap: 4px;
   padding: 3px 8px;
   border-radius: 8px;
-  background: rgba(14, 13, 19, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #FFFFFF;
+  background-color: rgba(16, 17, 22, 0.88);
+  border: 1px solid var(--m3-outline);
+  color: var(--m3-text-primary);
   font-size: 11px;
   font-weight: 700;
 }
@@ -607,26 +1017,26 @@ body, html, #root {
   gap: 4px;
   padding: 4px 10px;
   border-radius: 8px;
-  background: var(--m3-surface-container-high);
-  color: var(--m3-on-surface-variant);
+  background-color: var(--m3-surface);
+  color: var(--m3-text-secondary);
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border: 1px solid var(--m3-outline-variant);
+  border: 1px solid var(--m3-outline);
 }
 
 .status-pill.accent {
-  background: var(--m3-primary-container);
-  color: var(--m3-primary-light);
-  border-color: rgba(229, 9, 20, 0.3);
+  background-color: var(--m3-primary-container);
+  color: var(--m3-primary);
+  border-color: rgba(203, 166, 255, 0.35);
 }
 
 .details-title {
   font-size: 26px;
   font-weight: 800;
   line-height: 1.15;
-  color: #FFFFFF;
+  color: var(--m3-text-primary);
   margin: 4px 0 6px;
   letter-spacing: -0.02em;
 }
@@ -634,7 +1044,7 @@ body, html, #root {
 .details-tagline {
   font-size: 13px;
   font-style: italic;
-  color: var(--m3-muted);
+  color: var(--m3-text-secondary);
   margin-bottom: 10px;
 }
 
@@ -645,7 +1055,7 @@ body, html, #root {
   flex-wrap: wrap;
   gap: 12px;
   font-size: 12px;
-  color: var(--m3-on-surface-variant);
+  color: var(--m3-text-secondary);
   margin-bottom: 12px;
 }
 
@@ -667,9 +1077,9 @@ body, html, #root {
 .genre-pill {
   padding: 4px 12px;
   border-radius: 14px;
-  background: var(--m3-surface-container);
+  background-color: var(--m3-surface);
   border: 1px solid var(--m3-outline);
-  color: var(--m3-on-surface-variant);
+  color: var(--m3-text-secondary);
   font-size: 11.5px;
   font-weight: 500;
 }
@@ -677,12 +1087,11 @@ body, html, #root {
 .details-overview {
   font-size: 13.5px;
   line-height: 1.55;
-  color: var(--m3-on-surface-variant);
+  color: var(--m3-text-secondary);
   margin-bottom: 20px;
   text-align: center;
 }
 
-/* Material 3 Actions Group */
 .details-actions {
   display: flex;
   flex-direction: column;
@@ -699,11 +1108,11 @@ body, html, #root {
   width: 100%;
   height: 48px;
   border-radius: 24px;
-  background: var(--m3-primary-gradient);
-  color: #FFFFFF;
-  font-size: 15px;
-  font-weight: 700;
-  border: none;
+  background-color: var(--m3-primary) !important;
+  color: #101116 !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  border: none !important;
   cursor: pointer;
   box-shadow: var(--m3-primary-glow);
   transition: transform 0.12s var(--m3-easing-emphasized);
@@ -728,9 +1137,9 @@ body, html, #root {
   gap: 6px;
   height: 42px;
   border-radius: 21px;
-  background: var(--m3-surface-container);
+  background-color: var(--m3-surface);
   border: 1px solid var(--m3-outline);
-  color: var(--m3-on-surface);
+  color: var(--m3-text-primary);
   font-size: 12.5px;
   font-weight: 600;
   cursor: pointer;
@@ -739,13 +1148,13 @@ body, html, #root {
 
 .details-sec-btn:active {
   transform: scale(0.94);
-  background: var(--m3-surface-container-high);
+  background-color: var(--m3-surface-high);
 }
 
 .details-sec-btn.wished {
-  background: var(--m3-primary-container);
-  border-color: rgba(229, 9, 20, 0.4);
-  color: var(--m3-primary-light);
+  background-color: var(--m3-primary-container);
+  border-color: var(--m3-primary);
+  color: var(--m3-primary);
 }
 
 .details-sec-btn.icon-only {
@@ -753,30 +1162,29 @@ body, html, #root {
   padding: 0;
 }
 
-/* Material 3 Details Sections */
 .details-body {
   padding: 20px 16px 0;
 }
 
 .details-section {
-  background: var(--m3-surface-container-low);
+  background-color: var(--m3-surface);
   border-radius: 18px;
   padding: 18px;
-  border: 1px solid var(--m3-outline-variant);
+  border: 1px solid var(--m3-outline);
   margin-bottom: 20px;
 }
 
 .details-section .section-head h2 {
   font-size: 18px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--m3-text-primary);
   margin-bottom: 12px;
 }
 
 .storyline {
   font-size: 13.5px;
   line-height: 1.6;
-  color: var(--m3-on-surface-variant);
+  color: var(--m3-text-secondary);
 }
 
 .story-facts {
@@ -785,13 +1193,13 @@ body, html, #root {
   gap: 12px;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid var(--m3-outline-variant);
+  border-top: 1px solid var(--m3-outline);
 }
 
 .story-facts dt {
   font-size: 11px;
   font-weight: 600;
-  color: var(--m3-muted);
+  color: var(--m3-text-muted);
   text-transform: uppercase;
   margin-bottom: 3px;
 }
@@ -799,11 +1207,11 @@ body, html, #root {
 .story-facts dd {
   font-size: 13px;
   font-weight: 500;
-  color: var(--m3-on-surface);
+  color: var(--m3-text-primary);
   margin: 0;
 }
 
-/* Cast Row */
+/* Cast */
 .cast-scroller {
   display: flex;
   gap: 12px;
@@ -825,9 +1233,9 @@ body, html, #root {
   height: 58px;
   border-radius: 29px;
   overflow: hidden;
-  background: var(--m3-surface-container-high);
+  background-color: var(--m3-surface-high);
   margin-bottom: 6px;
-  border: 1px solid var(--m3-outline-variant);
+  border: 1px solid var(--m3-outline);
 }
 
 .cast-avatar img {
@@ -838,7 +1246,7 @@ body, html, #root {
 
 .cast-card strong {
   font-size: 11px;
-  color: #FFFFFF;
+  color: var(--m3-text-primary);
   font-weight: 600;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -848,7 +1256,7 @@ body, html, #root {
 
 .cast-card span {
   font-size: 10px;
-  color: var(--m3-muted);
+  color: var(--m3-text-secondary);
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -856,7 +1264,7 @@ body, html, #root {
 }
 
 /* ==========================================================================
-   Material 3 Player View (Clean Single Back Button)
+   Material 3 Player View (Clean Single Back Button & No Glitches)
    ========================================================================== */
 .player-page {
   position: fixed;
@@ -867,6 +1275,19 @@ body, html, #root {
   width: 100%;
   background-color: #000000;
   overflow: hidden;
+}
+
+.player-stage {
+  position: absolute;
+  inset: 0;
+  background-color: #000000;
+}
+
+.player-frame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: #000000;
 }
 
 .player-topbar {
@@ -883,8 +1304,24 @@ body, html, #root {
   padding-top: var(--safe-top);
   padding-left: calc(12px + var(--safe-left));
   padding-right: calc(12px + var(--safe-right));
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 65%, transparent 100%);
+  background: linear-gradient(180deg, rgba(16, 17, 22, 0.92) 0%, rgba(16, 17, 22, 0.45) 65%, transparent 100%);
+  pointer-events: none;
+  transition: opacity 0.3s var(--m3-easing-emphasized), transform 0.3s var(--m3-easing-emphasized);
+}
+
+.player-topbar > * {
   pointer-events: auto;
+}
+
+.player-topbar.controls-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
+}
+
+.player-topbar.controls-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .player-title {
@@ -900,9 +1337,9 @@ body, html, #root {
   width: 40px;
   height: 40px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #FFFFFF;
+  background-color: var(--m3-surface);
+  border: 1px solid var(--m3-outline);
+  color: var(--m3-text-primary);
   cursor: pointer;
   transition: transform 0.12s var(--m3-easing-emphasized);
 }
@@ -920,7 +1357,7 @@ body, html, #root {
 .player-title-text strong {
   font-size: 13.5px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: var(--m3-text-primary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -929,7 +1366,7 @@ body, html, #root {
 
 .player-title-text span {
   font-size: 11px;
-  color: var(--m3-muted);
+  color: var(--m3-text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -942,136 +1379,32 @@ body, html, #root {
   gap: 8px;
 }
 
+.player-actions .button.glass {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  background-color: var(--m3-surface);
+  border: 1px solid var(--m3-outline);
+  color: var(--m3-primary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .player-actions .icon-button {
   display: grid;
   place-items: center;
   width: 36px;
   height: 36px;
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
+  background-color: var(--m3-surface);
+  border: 1px solid var(--m3-outline);
+  color: var(--m3-text-primary);
   cursor: pointer;
 }
 
-.player-actions .icon-button:active {
-  transform: scale(0.92);
-}
-
-.player-stage {
-  position: absolute;
-  inset: calc(56px + var(--safe-top)) 0 0;
-  background-color: #000000;
-}
-
-.player-frame {
-  width: 100%;
-  height: 100%;
-  border: none;
-  background-color: #000000;
-}
-
 /* ==========================================================================
-   Home Hero Banner Mobile
+   Material 3 Search & Browse Controls
    ========================================================================== */
-.hero {
-  position: relative;
-  width: 100%;
-  height: 460px;
-  max-height: 65vh;
-}
-
-.hero-content {
-  width: 100% !important;
-  max-width: 100% !important;
-  padding: 0 16px 24px !important;
-}
-
-.hero-title {
-  font-size: clamp(24px, 7vw, 34px) !important;
-  line-height: 1.15 !important;
-  margin-top: 6px !important;
-  font-weight: 800 !important;
-}
-
-.hero-actions .button.primary {
-  height: 44px !important;
-  border-radius: 22px !important;
-  padding: 0 20px !important;
-  background: var(--m3-primary-gradient) !important;
-  box-shadow: var(--m3-primary-glow) !important;
-}
-
-.hero-actions .button.glass {
-  height: 44px !important;
-  border-radius: 22px !important;
-  padding: 0 16px !important;
-  background: var(--m3-surface-container) !important;
-  border: 1px solid var(--m3-outline) !important;
-}
-
-/* Horizontal Media Rows */
-.row {
-  margin-bottom: 24px;
-}
-
-.row-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  padding: 0 16px 10px;
-}
-
-.row-head h2 {
-  font-size: 19px;
-  font-weight: 700;
-  color: #FFFFFF;
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-.row-head p {
-  font-size: 12px;
-  color: var(--m3-muted);
-  margin: 3px 0 0;
-}
-
-.row-head-actions .row-arrows {
-  display: none !important;
-}
-
-.row-head-actions .see-all {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--m3-primary-light);
-  text-decoration: none;
-}
-
-.row-scroller {
-  display: flex;
-  gap: 12px;
-  padding: 0 16px 8px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
-  scroll-padding-left: 16px;
-  scrollbar-width: none;
-}
-
-.row-scroller::-webkit-scrollbar {
-  display: none;
-}
-
-.row-scroller > .media-card {
-  flex: 0 0 132px !important;
-  width: 132px !important;
-  scroll-snap-align: start;
-}
-
-/* Material 3 Search Bar */
 .search-form {
   display: flex !important;
   align-items: center !important;
@@ -1079,7 +1412,7 @@ body, html, #root {
   height: 52px !important;
   padding: 0 8px 0 16px !important;
   border-radius: 26px !important;
-  background: var(--m3-surface-container) !important;
+  background-color: var(--m3-surface) !important;
   border: 1px solid var(--m3-outline) !important;
   margin-bottom: 20px !important;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
@@ -1090,13 +1423,13 @@ body, html, #root {
   background: transparent !important;
   border: none !important;
   outline: none !important;
-  color: var(--m3-on-surface) !important;
+  color: var(--m3-text-primary) !important;
   font-size: 14.5px !important;
   min-width: 0 !important;
 }
 
 .search-form input::placeholder {
-  color: var(--m3-muted) !important;
+  color: var(--m3-text-secondary) !important;
 }
 
 .search-clear {
@@ -1105,9 +1438,9 @@ body, html, #root {
   width: 32px !important;
   height: 32px !important;
   border-radius: 16px !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
   border: none !important;
-  color: var(--m3-on-surface-variant) !important;
+  color: var(--m3-text-secondary) !important;
   cursor: pointer !important;
 }
 
@@ -1116,11 +1449,84 @@ body, html, #root {
   border-radius: 19px !important;
   padding: 0 16px !important;
   font-size: 13px !important;
-  font-weight: 600 !important;
-  background: var(--m3-primary-gradient) !important;
+  font-weight: 700 !important;
+  background-color: var(--m3-primary) !important;
+  color: #101116 !important;
+  border: none !important;
 }
 
-/* Material 3 Page Containers */
+.chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-left: 16px;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 18px;
+  border: 1px solid var(--m3-outline);
+  background-color: var(--m3-surface);
+  color: var(--m3-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s var(--m3-easing-emphasized);
+  flex-shrink: 0;
+}
+
+.chip:active {
+  transform: scale(0.95);
+}
+
+.chip.active {
+  background-color: var(--m3-primary);
+  border-color: var(--m3-primary);
+  color: #101116;
+  font-weight: 700;
+  box-shadow: var(--m3-primary-glow);
+}
+
+.browse-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.select-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 20px;
+  background-color: var(--m3-surface);
+  border: 1px solid var(--m3-outline);
+  color: var(--m3-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.select-field select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--m3-text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  outline: none;
+}
+
+/* Page containers */
 .page {
   padding: 16px 16px 24px !important;
 }
@@ -1135,15 +1541,25 @@ body, html, #root {
 .page-title {
   font-size: 26px !important;
   font-weight: 800 !important;
-  color: #FFFFFF !important;
+  color: var(--m3-text-primary) !important;
   margin: 4px 0 2px !important;
   letter-spacing: -0.02em !important;
 }
 
 .page-sub {
   font-size: 13px !important;
-  color: var(--m3-muted) !important;
+  color: var(--m3-text-secondary) !important;
   margin: 0 !important;
+}
+
+/* Typography & Multilingual Support (English, Bengali, Hindi) */
+.hero-title,
+.details-title,
+.page-title,
+.row-head h2,
+.media-card-poster .poster-title {
+  line-height: 1.28 !important;
+  padding-bottom: 3px;
 }
 
 /* Utilities */

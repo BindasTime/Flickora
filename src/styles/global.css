@@ -1,29 +1,29 @@
 /* ==========================================================================
-   Cinevra Desktop — design system
+   HaseebFlix — Google Material 3 Design System
    ========================================================================== */
 
 :root {
-  --bg: #07070a;
-  --bg-2: #0b0b10;
-  --panel: #101016;
-  --panel-2: #15151d;
-  --panel-3: #1b1b24;
-  --line: rgba(255, 255, 255, 0.075);
-  --line-strong: rgba(255, 255, 255, 0.14);
-  --text: #f4f5f7;
-  --muted: #9ba1ad;
-  --dim: #6e7480;
-  --accent: #e11d2f;
-  --accent-bright: #ff6b73;
-  --accent-dark: #6e0f18;
+  --bg: #101116;
+  --bg-2: #15161c;
+  --panel: #1c1b22;
+  --panel-2: #24232c;
+  --panel-3: #2e2d38;
+  --line: #49454f;
+  --line-strong: #6e6877;
+  --text: #f5f1fa;
+  --muted: #c4c0ca;
+  --dim: #8e8a96;
+  --accent: #cba6ff;
+  --accent-bright: #e6d5ff;
+  --accent-dark: #7c4dff;
   --gold: #f5c518;
   --green: #46d369;
-  --radius: 14px;
-  --radius-lg: 20px;
+  --radius: 16px;
+  --radius-lg: 24px;
   --sidebar-w: 248px;
   --titlebar-h: 48px;
   --shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
-  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease: cubic-bezier(0.2, 0, 0, 1);
   --font: "Inter", "Inter Variable", "SF Pro Display", "Segoe UI", "Ubuntu", ui-sans-serif,
     system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
   color-scheme: dark;
@@ -548,22 +548,22 @@ kbd {
 }
 
 .button.primary {
-  background: linear-gradient(180deg, #f24855, #b4161f);
-  border-color: rgba(255, 255, 255, 0.11);
-  color: #fff;
-  box-shadow: 0 10px 26px rgba(225, 29, 47, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  background: #cba6ff;
+  border-color: transparent;
+  color: #101116;
+  font-weight: 700;
+  box-shadow: 0 4px 18px rgba(203, 166, 255, 0.35);
 }
 
 .button.primary:hover:not(:disabled) {
-  background: linear-gradient(180deg, #ff6b73, #e11d2f);
-  box-shadow: 0 14px 32px rgba(225, 29, 47, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: #e6d5ff;
+  box-shadow: 0 6px 22px rgba(203, 166, 255, 0.45);
 }
 
 .button.glass {
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.12);
-  color: #f2f3f5;
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--line);
+  color: #f5f1fa;
 }
 
 .button.glass:hover:not(:disabled) {
@@ -3602,12 +3602,12 @@ kbd {
 }
 
 .toggle.on {
-  border-color: rgba(225, 29, 47, 0.55);
+  border-color: var(--accent);
   background: var(--accent);
 }
 
 .toggle.on span {
-  background: #fff;
+  background: #101116;
   transform: translateX(18px);
 }
 

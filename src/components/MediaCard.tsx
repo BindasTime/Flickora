@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Heart, Info, Play, Star } from 'lucide-react';
+import { Bookmark, Info, Play, Star } from 'lucide-react';
 import type { MediaSummary } from '../lib/types';
 import { posterUrl } from '../lib/tmdb';
 import { formatScore, yearOf } from '../lib/format';
@@ -81,14 +81,14 @@ export function MediaCard({ media, rank, className = '', showMeta = true }: Medi
           <button
             type="button"
             className={`icon-button${wished ? ' active' : ''}`}
-            aria-label={wished ? 'Remove from wishlist' : 'Add to wishlist'}
+            aria-label={wished ? 'Remove from list' : 'Add to list'}
             onClick={(event) => {
               event.preventDefault();
               event.stopPropagation();
               toggleWishlist(media);
             }}
           >
-            <Heart size={15} fill={wished ? 'currentColor' : 'none'} />
+            <Bookmark size={15} fill={wished ? 'currentColor' : 'none'} />
           </button>
           <button
             type="button"

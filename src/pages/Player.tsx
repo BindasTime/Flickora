@@ -90,6 +90,23 @@ export function Player() {
   const [error, setError] = useState<string | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [provider, setProvider] = useState<string | null>(null);
+  const [showControls, setShowControls] = useState(true);
+  const hideControlsTimer = useRef<number | null>(null);
+
+  const resetControlsTimer = useCallback(() => {
+    setShowControls(true);
+    if (hideControlsTimer.current) window.clearTimeout(hideControlsTimer.current);
+    hideControlsTimer.current = window.setTimeout(() => {
+      setShowControls(false);
+    }, 4000);
+  }, []);
+
+  useEffect(() => {
+    resetControlsTimer();
+    return () => {
+      if (hideControlsTimer.current) window.clearTimeout(hideControlsTimer.current);
+    };
+  }, [resetControlsTimer]);
 
   const { data: details } = useAsync(() => fetchDetails(mediaType, id), [mediaType, id]);
   const activeSeason = useAsync<SeasonDetails | null>(
@@ -573,7 +590,12 @@ export function Player() {
       : 'Movie';
 
   return (
-    <div className="player-page">
+    <div
+      className="player-page"
+      onClick={resetControlsTimer}
+      onTouchStart={resetControlsTimer}
+      onMouseMove={resetControlsTimer}
+    >
       <div
         className="player-bg"
         style={{
@@ -582,7 +604,7 @@ export function Player() {
             : undefined,
         }}
       />
-      <header className="player-topbar">
+      <header className={`player-topbar ${showControls ? 'controls-visible' : 'controls-hidden'}`}>
         <div className="player-title">
           <button type="button" className="icon-button no-drag" aria-label="Back" onClick={goBack}>
             <ArrowLeft size={18} />
