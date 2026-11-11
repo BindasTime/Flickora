@@ -112,7 +112,7 @@ export function Settings() {
 
   const reset = async () => {
     const confirmed = await hf.confirm({
-      title: 'Reset Cinevra',
+      title: 'Reset HaseebFlix',
       message: 'Reset settings, wishlist, watch progress, and recent searches?',
       detail: 'This cannot be undone.',
     });
@@ -289,7 +289,7 @@ export function Settings() {
           />
           <Toggle
             label="Player branding"
-            help="Show the Cinevra name, logo, and violet accent inside the player."
+            help="Show the HaseebFlix name and red accent inside the player."
             checked={settings.playerBranding}
             onChange={(value) => void updateSettings({ playerBranding: value })}
           />
@@ -407,7 +407,7 @@ export function Settings() {
 
           <div className="link-list">
             <button type="button" className="link-row" onClick={() => void hf.openExternal(SOURCE_REPO)}>
-              Cinevra on GitHub
+              HaseebFlix on GitHub
             </button>
             <button type="button" className="link-row" onClick={() => void hf.openExternal(PRIVACY_URL)}>
               Privacy policy

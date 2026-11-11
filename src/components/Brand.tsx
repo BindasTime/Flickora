@@ -56,8 +56,8 @@ export function BrandMark({ size = 28 }: { size?: number }) {
 export function Wordmark({ compact = false }: { compact?: boolean }) {
   return (
     <span className="wordmark">
-      <span className="wordmark-main">CINE</span>
-      <span className="wordmark-accent">VRA</span>
+      <span className="wordmark-main">HASEEB</span>
+      <span className="wordmark-accent">FLIX</span>
       {!compact && <span className="wordmark-dot" aria-hidden="true" />}
     </span>
   );

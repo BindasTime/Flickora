@@ -274,7 +274,7 @@ export function Details() {
   const saveMetadata = () => {
     const content = JSON.stringify(
       {
-        app: 'Cinevra',
+        app: 'HaseebFlix',
         exportedAt: new Date().toISOString(),
         mediaType,
         audio: audio.data?.ok ? audio.data : null,
@@ -300,9 +300,6 @@ export function Details() {
           }}
         />
         <div className="details-scrim" />
-        <button type="button" className="details-back" onClick={() => navigate(-1)} aria-label="Go back">
-          <ArrowLeft size={18} />
-        </button>
 
         <div className="details-shell">
           <div className="details-poster-wrap">
@@ -378,30 +375,32 @@ export function Details() {
             </p>
 
             <div className="details-actions">
-              <button type="button" className="button primary" onClick={mainPlay}>
-                <Play size={17} fill="currentColor" /> {playLabel}
+              <button type="button" className="button primary details-play-btn" onClick={mainPlay}>
+                <Play size={18} fill="currentColor" /> {playLabel}
               </button>
-              <button
-                type="button"
-                className={`button glass${wished ? ' wished' : ''}`}
-                onClick={() => toggleWishlist(details)}
-              >
-                {wished ? <Check size={17} /> : <Heart size={17} />}
-                {wished ? 'In wishlist' : 'Wishlist'}
-              </button>
-              {featuredTrailer && (
-                <button type="button" className="button glass" onClick={() => openTrailer()}>
-                  <Clapperboard size={17} /> Trailer
+              <div className="details-secondary-row">
+                <button
+                  type="button"
+                  className={`button glass details-sec-btn${wished ? ' wished' : ''}`}
+                  onClick={() => toggleWishlist(details)}
+                >
+                  {wished ? <Check size={16} /> : <Heart size={16} />}
+                  {wished ? 'Wishlisted' : 'Wishlist'}
                 </button>
-              )}
-              <button type="button" className="button glass" onClick={() => setDownloadOpen(true)}>
-                <Download size={17} /> Download
-              </button>
-              {details.homepage && (
-                <a className="icon-button bordered" href={details.homepage} target="_blank" rel="noreferrer" aria-label="Official website">
-                  <ExternalLink size={16} />
-                </a>
-              )}
+                {featuredTrailer && (
+                  <button type="button" className="button glass details-sec-btn" onClick={() => openTrailer()}>
+                    <Clapperboard size={16} /> Trailer
+                  </button>
+                )}
+                <button type="button" className="button glass details-sec-btn" onClick={() => setDownloadOpen(true)}>
+                  <Download size={16} /> Download
+                </button>
+                {details.homepage && (
+                  <a className="button glass details-sec-btn icon-only" href={details.homepage} target="_blank" rel="noreferrer" aria-label="Official website">
+                    <ExternalLink size={16} />
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -813,7 +812,7 @@ export function Details() {
             <p className="download-note">
               <Info size={15} />
               <span>
-                Video files cannot be saved. Cinevra plays titles through the VidRift embed, which
+                Video files cannot be saved. HaseebFlix plays titles through the VidRift embed, which
                 streams the video and does not expose a downloadable file.
               </span>
             </p>

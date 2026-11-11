@@ -13,9 +13,10 @@ export function BottomNav() {
         className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}
       >
         <div className="bottom-nav-icon-wrap">
-          <Home size={22} strokeWidth={2.2} />
+          <div className="bottom-nav-indicator" />
+          <Home size={22} strokeWidth={2.2} className="bottom-nav-icon" />
         </div>
-        <span>Home</span>
+        <span className="bottom-nav-label">Home</span>
       </NavLink>
 
       <NavLink
@@ -23,9 +24,10 @@ export function BottomNav() {
         className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}
       >
         <div className="bottom-nav-icon-wrap">
-          <Film size={22} strokeWidth={2.2} />
+          <div className="bottom-nav-indicator" />
+          <Film size={22} strokeWidth={2.2} className="bottom-nav-icon" />
         </div>
-        <span>Movies</span>
+        <span className="bottom-nav-label">Movies</span>
       </NavLink>
 
       <NavLink
@@ -33,9 +35,10 @@ export function BottomNav() {
         className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}
       >
         <div className="bottom-nav-icon-wrap">
-          <Tv size={22} strokeWidth={2.2} />
+          <div className="bottom-nav-indicator" />
+          <Tv size={22} strokeWidth={2.2} className="bottom-nav-icon" />
         </div>
-        <span>TV Shows</span>
+        <span className="bottom-nav-label">TV Shows</span>
       </NavLink>
 
       <NavLink
@@ -43,9 +46,10 @@ export function BottomNav() {
         className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}
       >
         <div className="bottom-nav-icon-wrap">
-          <Search size={22} strokeWidth={2.2} />
+          <div className="bottom-nav-indicator" />
+          <Search size={22} strokeWidth={2.2} className="bottom-nav-icon" />
         </div>
-        <span>Search</span>
+        <span className="bottom-nav-label">Search</span>
       </NavLink>
 
       <NavLink
@@ -53,12 +57,13 @@ export function BottomNav() {
         className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}
       >
         <div className="bottom-nav-icon-wrap">
-          <Heart size={22} strokeWidth={2.2} />
+          <div className="bottom-nav-indicator" />
+          <Heart size={22} strokeWidth={2.2} className="bottom-nav-icon" />
           {wishlist.length > 0 && (
             <span className="bottom-nav-badge">{wishlist.length > 99 ? '99+' : wishlist.length}</span>
           )}
         </div>
-        <span>Wishlist</span>
+        <span className="bottom-nav-label">Wishlist</span>
       </NavLink>
     </nav>
   );

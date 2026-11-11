@@ -174,7 +174,7 @@ export function Home() {
         />
 
         <footer className="page-footer">
-          <span>Cinevra Desktop</span>
+          <span>HaseebFlix Mobile</span>
           <span className="dot-sep">•</span>
           <span>Metadata &amp; artwork by TMDB</span>
           <span className="dot-sep">•</span>

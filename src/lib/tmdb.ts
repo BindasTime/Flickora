@@ -445,10 +445,9 @@ export function buildEmbedUrl(
   );
   if (options.title) url.searchParams.set('title', options.title);
   if (options.branding !== false) {
-    url.searchParams.set('brand', 'Cinevra');
-    url.searchParams.set('brandColor', 'e11d2f');
+    url.searchParams.set('brand', 'HaseebFlix');
+    url.searchParams.set('brandColor', 'e50914');
     url.searchParams.set('showTitle', '1');
-    url.searchParams.set('exit', '1');
   }
   return url.toString();
 }

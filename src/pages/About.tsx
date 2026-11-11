@@ -87,14 +87,14 @@ const FEATURES = [
 ];
 
 const DESKTOP_FACTS = [
-  ['App', 'Cinevra Desktop 1.0.0'],
-  ['Package', 'io.cinevra.desktop'],
-  ['Platform', 'Linux · Electron · React · TypeScript'],
+  ['App', 'HaseebFlix Mobile 1.0.0'],
+  ['Package', 'com.haseebflix.mobile'],
+  ['Platform', 'Android · Capacitor · React · TypeScript'],
   ['Metadata', 'TMDB REST API v3'],
   ['Playback', 'VidRift embed player'],
   ['Filters', 'Category, genre, origin country, dual audio'],
   ['Downloads', 'Poster, backdrop, metadata JSON'],
-  ['Data folder', '~/.config/Cinevra'],
+  ['Data folder', 'HaseebFlix App Storage'],
 ];
 
 export function About() {
@@ -188,8 +188,8 @@ export function About() {
             <Database size={20} />
             <h3>Local state</h3>
             <p>
-              Settings, wishlist, progress, and recent searches are written to a single JSON file in
-              the Cinevra data folder. Nothing is sent to a Cinevra server.
+              Settings, wishlist, progress, and recent searches are saved locally on this device.
+              Nothing is sent to an external server.
             </p>
           </article>
         </div>
@@ -198,7 +198,7 @@ export function About() {
       <div className="about-columns">
         <section className="about-section">
           <div className="section-head">
-            <h2>Desktop build</h2>
+            <h2>Mobile build</h2>
           </div>
           <dl className="fact-list">
             {DESKTOP_FACTS.map(([label, value]) => (
@@ -209,9 +209,9 @@ export function About() {
             ))}
           </dl>
           <p className="about-note">
-            Cinevra is a standalone desktop client. It reads the public TMDB catalogue, keeps your
-            library on this computer, and embeds the VidRift player for playback. It does not host or
-            distribute video.
+            HaseebFlix is an open personal mobile streaming client. It reads the public TMDB catalogue,
+            keeps your library on this device, and embeds the VidRift player for playback. It does not
+            host or distribute video.
           </p>
         </section>
 
@@ -236,7 +236,7 @@ export function About() {
             </button>
             <button type="button" className="credit-row" onClick={() => void hf.openExternal(SOURCE_REPO)}>
               <span>
-                <strong>Cinevra on GitHub</strong>
+                <strong>HaseebFlix on GitHub</strong>
                 <small>Source code and release notes</small>
               </span>
               <ArrowUpRight size={16} />
@@ -244,7 +244,7 @@ export function About() {
             <button type="button" className="credit-row" onClick={() => void hf.openExternal(PRIVACY_URL)}>
               <span>
                 <strong>Privacy policy</strong>
-                <small>How Cinevra handles your data</small>
+                <small>How HaseebFlix handles your data</small>
               </span>
               <ArrowUpRight size={16} />
             </button>
@@ -259,7 +259,7 @@ export function About() {
           <div className="disclaimer">
             <ShieldCheck size={16} />
             <p>
-              Cinevra is an unofficial, personal-use client. It does not host, store, or distribute
+              HaseebFlix is an unofficial, personal-use client. It does not host, store, or distribute
               video. All metadata belongs to TMDB and all playback is provided by VidRift. If you
               enjoy something you find here, watch it on an official service.
             </p>

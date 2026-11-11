@@ -17,17 +17,32 @@ export function MobileHeader() {
     <header className="mobile-header">
       <div className="mobile-header-left">
         {isSubPage ? (
-          <button
-            type="button"
-            className="mobile-back-btn"
-            onClick={() => navigate(-1)}
-            aria-label="Back"
-          >
-            <ArrowLeft size={22} />
-          </button>
+          <div className="mobile-subpage-header">
+            <button
+              type="button"
+              className="mobile-back-btn"
+              onClick={() => {
+                if (window.history.length > 1) {
+                  navigate(-1);
+                } else {
+                  navigate('/');
+                }
+              }}
+              aria-label="Back"
+            >
+              <ArrowLeft size={22} />
+            </button>
+            <span className="mobile-subpage-title">
+              {location.pathname === '/settings'
+                ? 'Settings'
+                : location.pathname === '/about'
+                ? 'About'
+                : 'Details'}
+            </span>
+          </div>
         ) : (
           <div className="mobile-brand-wrap" onClick={() => navigate('/')}>
-            <BrandMark size={26} />
+            <BrandMark size={28} />
             <Wordmark compact />
           </div>
         )}

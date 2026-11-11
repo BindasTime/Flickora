@@ -263,8 +263,8 @@ export function Browse({ type }: { type: MediaType }) {
       {audioUnavailable ? (
         <EmptyState
           icon={<Languages size={26} />}
-          title="This filter needs the desktop app"
-          message="Audio tracks are read from each title's VidRift embed by the desktop app, which a browser tab cannot reach. Open Cinevra on your desktop and choose Dual audio or South movies to see only titles with a verified Hindi track."
+          title="Desktop feature"
+          message="Deep audio-track verification scans require the desktop edition of HaseebFlix. You can explore all other categories, genres, and countries directly here on mobile!"
           action={
             <button type="button" className="button glass" onClick={() => navigate('/movies')}>
               <Film size={15} /> Browse all movies
