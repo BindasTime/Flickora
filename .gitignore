@@ -23,6 +23,9 @@ android/app/src/main/assets/capacitor.plugins.json
 *.apk
 *.aab
 
+# Screenshots – committed intentionally
+!Screenshots/
+
 # Editor
 .vscode/
 .idea/
