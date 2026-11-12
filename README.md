@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.png" alt="Flickora Logo" width="90" height="90" />
+<img src="https://raw.githubusercontent.com/BindasTime/Flickora-Mobile/main/build/icon.svg" alt="Flickora Logo" width="90" height="90" />
 
 # Flickora Mobile
 
