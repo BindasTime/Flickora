@@ -9,6 +9,8 @@ Browse trending titles, explore by genre and country, save your watchlist, and p
 Built with React, TypeScript, and Capacitor — powered by TMDB metadata and the VidRift player.  
 No account. No tracking. Everything stays on your device.
 
+[![Get it on Orion Store](https://raw.githubusercontent.com/RookieEnough/Orion-Store/refs/heads/main/assets/orion-badge.png)](https://rookieenough.github.io/Orion-Data/app/?id=flickora)
+
 [![Release](https://img.shields.io/github/v/release/BindasTime/Flickora-Mobile?color=e05c3b&label=Latest%20Release&style=flat-square)](https://github.com/BindasTime/Flickora-Mobile/releases/latest)
 [![Android](https://img.shields.io/badge/Platform-Android-brightgreen?style=flat-square&logo=android)](https://github.com/BindasTime/Flickora-Mobile/releases/latest)
 [![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react)](https://react.dev)
