@@ -5,7 +5,9 @@
 # Flickora Mobile
 
 **A beautiful, fast Android streaming client for discovering movies and TV series.**  
-Built with React, TypeScript, and Capacitor — powered by TMDB metadata and the VidRift player.
+Browse trending titles, explore by genre and country, save your watchlist, and pick up right where you left off.  
+Built with React, TypeScript, and Capacitor — powered by TMDB metadata and the VidRift player.  
+No account. No tracking. Everything stays on your device.
 
 [![Release](https://img.shields.io/github/v/release/BindasTime/Flickora-Mobile?color=e05c3b&label=Latest%20Release&style=flat-square)](https://github.com/BindasTime/Flickora-Mobile/releases/latest)
 [![Android](https://img.shields.io/badge/Platform-Android-brightgreen?style=flat-square&logo=android)](https://github.com/BindasTime/Flickora-Mobile/releases/latest)
