@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/icon.png" alt="Flickora Logo" width="90" height="90" />
+<img src="assets/logo.png" alt="Flickora Logo" width="90" height="90" />
 
 # Flickora Mobile
 
