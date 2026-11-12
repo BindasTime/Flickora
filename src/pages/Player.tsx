@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react';
 import { hf } from '../lib/bridge';
+import { setImmersiveMode, setPlaybackOrientation } from '../lib/bridge';
 import { useApp } from '../state/AppState';
 import { useAsync } from '../lib/hooks';
 import { buildEmbedUrl, fetchDetails, fetchSeason, stillUrl } from '../lib/tmdb';
@@ -318,8 +319,27 @@ export function Player() {
   const toggleFullscreen = useCallback(async () => {
     const next = !isFullscreen;
     setIsFullscreen(next);
-    await hf.window.setFullScreen(next);
+    const nativeFullscreen = await hf.window.setFullScreen(next);
+    if (!nativeFullscreen) {
+      const frame = frameRef.current;
+      try {
+        if (next && frame?.requestFullscreen) await frame.requestFullscreen();
+        else if (!next && document.fullscreenElement) await document.exitFullscreen();
+      } catch (fullscreenError) {
+        console.warn('Unable to toggle player fullscreen', fullscreenError);
+      }
+    }
+    await setImmersiveMode(next && window.matchMedia('(orientation: landscape)').matches);
   }, [isFullscreen]);
+
+  useEffect(() => {
+    void setPlaybackOrientation(true);
+    void setImmersiveMode(true);
+    return () => {
+      void setImmersiveMode(false);
+      void setPlaybackOrientation(false);
+    };
+  }, []);
 
   // Persist on close / hide.
   useEffect(() => {
@@ -535,6 +555,7 @@ export function Player() {
         else if (isFullscreen) {
           setIsFullscreen(false);
           void hf.window.setFullScreen(false);
+          void setImmersiveMode(false);
         } else goBack();
       }
       if (event.key.toLowerCase() === 'f') void toggleFullscreen();
@@ -547,11 +568,25 @@ export function Player() {
     return () => window.removeEventListener('keydown', onKey);
   }, [drawerOpen, isFullscreen, goBack, toggleFullscreen, selectEpisode]);
 
+  useEffect(() => {
+    const onAndroidBack = () => {
+      if (drawerOpen) setDrawerOpen(false);
+      else if (isFullscreen) {
+        setIsFullscreen(false);
+        void hf.window.setFullScreen(false);
+        void setImmersiveMode(false);
+      } else goBack();
+    };
+    window.addEventListener('hf:android-back', onAndroidBack);
+    return () => window.removeEventListener('hf:android-back', onAndroidBack);
+  }, [drawerOpen, isFullscreen, goBack]);
+
   useEffect(
     () => () => {
       if (nextTimerRef.current) window.clearTimeout(nextTimerRef.current);
       stopResume();
       void hf.window.setFullScreen(false);
+      void setImmersiveMode(false);
     },
     [stopResume],
   );

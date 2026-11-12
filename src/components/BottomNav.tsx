@@ -38,7 +38,7 @@ export function BottomNav() {
           <div className="bottom-nav-indicator" />
           <Tv size={22} strokeWidth={2.2} className="bottom-nav-icon" />
         </div>
-        <span className="bottom-nav-label">Live TV</span>
+        <span className="bottom-nav-label">TV Series</span>
       </NavLink>
 
       <NavLink

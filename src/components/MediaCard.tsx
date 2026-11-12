@@ -57,8 +57,6 @@ export function MediaCard({ media, rank, className = '', showMeta = true }: Medi
 
         <div className="poster-sheen" />
 
-        {rank !== undefined && <span className="rank-badge">{rank}</span>}
-
         {media.voteAverage > 0 && (
           <span className={`rating-chip ${ratingClass(media.voteAverage)}`}>
             <Star size={10} fill="currentColor" /> {formatScore(media.voteAverage)}
@@ -103,14 +101,20 @@ export function MediaCard({ media, rank, className = '', showMeta = true }: Medi
             <Info size={15} />
           </button>
         </div>
-
-        {showMeta && (
-          <div className="poster-caption">
-            <span className="poster-title">{media.title}</span>
-            <span className="poster-meta">{meta}</span>
-          </div>
-        )}
       </Link>
+
+      {rank !== undefined && (
+        <span className="rank-badge" aria-label={`Rank ${rank}`}>
+          <span>{rank}</span>
+        </span>
+      )}
+
+      {showMeta && (
+        <div className="poster-caption">
+          <span className="poster-title">{media.title}</span>
+          <span className="poster-meta">{meta}</span>
+        </div>
+      )}
     </article>
   );
 }

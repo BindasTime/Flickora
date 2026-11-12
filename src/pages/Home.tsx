@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
-import { ArrowUpRight, Clapperboard, Flame, Home as HomeIcon, Radio, Smile, Sparkles, Tv } from 'lucide-react';
-import { Link, NavLink } from 'react-router-dom';
+import { ArrowUpRight, Clapperboard, Flame, Sparkles, Tv } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Hero } from '../components/Hero';
 import { MediaRow } from '../components/MediaRow';
 import { ContinueCard } from '../components/ContinueCard';
 import { useApp } from '../state/AppState';
 import { useAsync } from '../lib/hooks';
-import { fetchLatestMovies, fetchList } from '../lib/tmdb';
+import { fetchLatestMovies, fetchList, fetchTopMoviesToday } from '../lib/tmdb';
 import type { ListKind, MediaSummary, MediaType } from '../lib/types';
 
 function ListRow({
@@ -33,6 +33,20 @@ function ListRow({
       loading={loading}
       ranked={ranked}
       seeAllTo={seeAllTo}
+    />
+  );
+}
+
+function TopMoviesTodayRow() {
+  const { data, loading } = useAsync(() => fetchTopMoviesToday(), []);
+  return (
+    <MediaRow
+      title="Top 10 Movies Today"
+      subtitle="Released movies trending today"
+      items={data?.items || []}
+      loading={loading}
+      ranked
+      seeAllTo="/movies?kind=trending"
     />
   );
 }
@@ -75,33 +89,20 @@ export function Home() {
 
   return (
     <div className="home">
-      <div className="home-category-bar hide-scrollbar">
-        <NavLink to="/" end className={({ isActive }) => `home-cat-chip${isActive ? ' active' : ''}`}>
-          <HomeIcon size={16} /> Home
-        </NavLink>
-        <NavLink to="/movies" className="home-cat-chip">
-          <Clapperboard size={16} /> Movies
-        </NavLink>
-        <NavLink to="/tv" className="home-cat-chip">
-          <Tv size={16} /> Series
-        </NavLink>
-        <NavLink to="/tv?kind=now_playing" className="home-cat-chip">
-          <Radio size={16} /> Live TV
-        </NavLink>
-        <NavLink to="/movies?genre=10751" className="home-cat-chip">
-          <Smile size={16} /> Kids
-        </NavLink>
-      </div>
-
       <Hero items={heroItems} loading={movieTrending.loading && tvTrending.loading} />
 
       <div className="page-body">
+        <nav className="home-category-bar" aria-label="Explore Flickora">
+          <Link className="home-cat-chip active" to="/movies?kind=trending"><Sparkles size={15} /> For you</Link>
+          <Link className="home-cat-chip" to="/movies"><Clapperboard size={15} /> Movies</Link>
+          <Link className="home-cat-chip" to="/tv"><Tv size={15} /> Series</Link>
+        </nav>
         {continueItems.length > 0 && (
           <section className="continue-section">
             <div className="row-head">
               <div>
                 <h2>
-                  <Flame size={19} className="head-icon" /> Continue watching
+                  <Flame size={18} className="head-icon" /> Continue Watching
                 </h2>
                 <p>Pick up right where you left off.</p>
               </div>
@@ -117,82 +118,59 @@ export function Home() {
           </section>
         )}
 
-        <div className="section-divider">
-          <span>
-            <Sparkles size={14} /> Movies
-          </span>
-        </div>
-
+        <TopMoviesTodayRow />
+        <ListRow
+          type="movie"
+          kind="trending"
+          title="Trending Now"
+          subtitle="What everyone is watching"
+          seeAllTo="/movies?kind=trending"
+        />
         <MediaRow
-          title="Latest this month"
-          subtitle={`New releases in ${monthLabel} · updates every 30 minutes`}
+          title="New Releases"
+          subtitle={`Fresh titles in ${monthLabel}`}
           items={latestMovies.data?.items || []}
           loading={latestMovies.loading}
           seeAllTo="/movies?kind=latest"
         />
-        <ListRow
-          type="movie"
-          kind="trending"
-          title="Trending today"
-          subtitle="What everyone is watching right now"
-          ranked
-          seeAllTo="/movies?kind=trending"
-        />
-        <ListRow
-          type="movie"
-          kind="popular"
-          title="Popular movies"
-          seeAllTo="/movies?kind=popular"
-        />
+        <ListRow type="movie" kind="popular" title="Popular Movies" seeAllTo="/movies?kind=popular" />
         <ListRow
           type="movie"
           kind="top_rated"
-          title="Top rated of all time"
+          title="Top Rated Movies"
           seeAllTo="/movies?kind=top_rated"
         />
         <ListRow
           type="movie"
           kind="now_playing"
-          title="In theatres now"
+          title="In Theatres"
           seeAllTo="/movies?kind=now_playing"
         />
-        <ListRow
-          type="movie"
-          kind="upcoming"
-          title="Coming soon"
-          seeAllTo="/movies?kind=upcoming"
-        />
-
-        <div className="section-divider">
-          <span>
-            <Sparkles size={14} /> Series
-          </span>
-        </div>
+        <ListRow type="movie" kind="upcoming" title="Coming Soon" seeAllTo="/movies?kind=upcoming" />
 
         <ListRow
           type="tv"
           kind="trending"
-          title="Trending series"
-          ranked
+          title="Trending Series"
           seeAllTo="/tv?kind=trending"
         />
-        <ListRow type="tv" kind="popular" title="Popular series" seeAllTo="/tv?kind=popular" />
+        <ListRow type="tv" kind="popular" title="Popular Series" seeAllTo="/tv?kind=popular" />
         <ListRow
           type="tv"
           kind="top_rated"
-          title="Top rated series"
+          title="Top Rated Series"
           seeAllTo="/tv?kind=top_rated"
         />
         <ListRow
           type="tv"
           kind="now_playing"
-          title="On the air"
+          title="On the Air"
           subtitle="Currently airing seasons"
           seeAllTo="/tv?kind=now_playing"
         />
 
         <footer className="page-footer">
-          <span>HaseebFlix Mobile</span>
+          <span>Flickora</span>
           <span className="dot-sep">•</span>
           <span>Metadata &amp; artwork by TMDB</span>
           <span className="dot-sep">•</span>

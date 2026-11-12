@@ -198,6 +198,8 @@ export interface DiscoverOptions {
   genreId?: number;
   country?: string;
   originalLanguage?: string;
+  /** Skip VidRift audio verification when that desktop-only lookup is unavailable. */
+  verifyAudio?: boolean;
   /**
    * Called the moment a title's audio check passes, so an audio scan can fill
    * the grid while the rest of the batch is still being verified.
@@ -274,6 +276,33 @@ export async function fetchList(
   if (kind === 'south_hindi') return fetchSouthHindiMovies({ page });
   const raw = await get<RawPaged>(listPath[kind](type), { page });
   return normalizePaged(raw, type);
+}
+
+/** Today's trending movie ranking, limited to titles with a real past release date. */
+export async function fetchTopMoviesToday(): Promise<PagedResult<MediaSummary>> {
+  const today = isoDate(0);
+  const items: MediaSummary[] = [];
+  const seen = new Set<number>();
+  let page = 1;
+  let totalPages = 1;
+
+  // Trending results can include future-dated titles. Read further pages until
+  // we have a full top ten of released movies (or TMDB has no more pages).
+  while (items.length < 10 && page <= totalPages && page <= 5) {
+    const result = await fetchList('movie', 'trending', page);
+    totalPages = result.totalPages;
+    for (const movie of result.items) {
+      if (seen.has(movie.id)) continue;
+      seen.add(movie.id);
+      if (movie.releaseDate && /^\d{4}-\d{2}-\d{2}$/.test(movie.releaseDate) && movie.releaseDate <= today) {
+        items.push(movie);
+        if (items.length === 10) break;
+      }
+    }
+    page += 1;
+  }
+
+  return { page: 1, totalPages: 1, totalResults: items.length, items };
 }
 
 /**
@@ -443,9 +472,10 @@ export function buildEmbedUrl(
     type === 'movie' ? `/embed/movie/${id}` : `/embed/tv/${id}/${options.season ?? 1}/${options.episode ?? 1}`,
     'https://embed.vidrift.net',
   );
-  // Do NOT pass title, showTitle, brand, or exit to VidRift!
-  // This prevents VidRift from drawing a duplicate in-player title header or duplicate back button,
-  // leaving our app's native Material 3 top bar in full, glitch-free control.
+  // Explicitly disable VidRift internal title, branding, and exit controls to prevent
+  // duplicate back buttons and duplicate title overlays. Our Material 3 Player UI handles this cleanly.
+  url.searchParams.set('showTitle', '0');
+  url.searchParams.set('exit', '0');
   return url.toString();
 }
 
@@ -804,7 +834,7 @@ export async function fetchDualAudioMovies(
 export async function fetchSouthHindiMovies(
   options: DiscoverOptions = {},
 ): Promise<PagedResult<MediaSummary>> {
-  const { page = 1, genreId, country, onItem } = options;
+  const { page = 1, genreId, country, onItem, verifyAudio = true } = options;
   if (page < 1 || page > TMDB_MAX_PAGE) {
     return { page, totalPages: page, totalResults: 0, items: [] };
   }
@@ -826,11 +856,15 @@ export async function fetchSouthHindiMovies(
     }
   }
 
-  const items = await verifyAudioCandidates(
-    candidates,
-    (media, languages) => hasHindiAudio(languages, media.originalLanguage),
-    onItem,
-  );
+  const items = verifyAudio
+    ? await verifyAudioCandidates(
+        candidates,
+        (media, languages) => hasHindiAudio(languages, media.originalLanguage),
+        onItem,
+      )
+    : candidates;
+
+  if (!verifyAudio && onItem) items.forEach(onItem);
 
   const totalPages = Math.max(0, ...candidateResults.map((result) => result.totalPages));
   return {

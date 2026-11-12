@@ -64,7 +64,8 @@ export function Browse({ type }: { type: MediaType }) {
   const isAudioScan = isDualAudio || isSouthHindi;
   // Audio verification reads VidRift through the Electron main process, so a
   // browser tab cannot run these categories at all.
-  const audioUnavailable = isAudioScan && hf.audio.available === false;
+  const audioUnavailable = isDualAudio && hf.audio.available === false;
+  const southHindiUnverified = isSouthHindi && hf.audio.available === false;
 
   const countryList = useAsync<CountryOption[]>(() => fetchCountries(), []);
   const countryOptions = countryList.data?.length ? countryList.data : FALLBACK_COUNTRIES;
@@ -91,6 +92,7 @@ export function Browse({ type }: { type: MediaType }) {
         page,
         genreId: genre || undefined,
         country: country || undefined,
+        verifyAudio: hf.audio.available !== false,
         onItem,
       });
     }
@@ -234,7 +236,7 @@ export function Browse({ type }: { type: MediaType }) {
         </div>
       </div>
 
-      {isAudioScan && !audioUnavailable && (
+      {isAudioScan && !audioUnavailable && !southHindiUnverified && (
         <div className="audio-scan-note">
           <Languages size={15} />
           <span>
@@ -247,8 +249,11 @@ export function Browse({ type }: { type: MediaType }) {
               </>
             ) : isSouthHindi ? (
               <>
-                Only Tamil, Telugu, Malayalam, and Kannada titles whose VidRift embed publishes a
-                Hindi track are listed. Results are cached so repeat visits are quick.
+                Tamil, Telugu, Malayalam, and Kannada movies
+                {southHindiUnverified
+                  ? ' are shown here; Hindi audio tracks cannot be verified on this device.'
+                  : ' with Hindi audio verified in their VidRift embed are listed.'}{' '}
+                Results are cached so repeat visits are quick.
               </>
             ) : (
               <>
@@ -264,7 +269,7 @@ export function Browse({ type }: { type: MediaType }) {
         <EmptyState
           icon={<Languages size={26} />}
           title="Desktop feature"
-          message="Deep audio-track verification scans require the desktop edition of HaseebFlix. You can explore all other categories, genres, and countries directly here on mobile!"
+          message="Deep audio-track verification scans require the desktop edition of Flickora. You can explore all other categories, genres, and countries directly here on mobile!"
           action={
             <button type="button" className="button glass" onClick={() => navigate('/movies')}>
               <Film size={15} /> Browse all movies
@@ -276,7 +281,7 @@ export function Browse({ type }: { type: MediaType }) {
       ) : list.error && !list.items.length ? (
         <ErrorState message={list.error} onRetry={list.reload} />
       ) : list.items.length === 0 ? (
-        isAudioScan ? (
+        isAudioScan && !southHindiUnverified ? (
           <EmptyState
             icon={<Languages size={26} />}
             title={

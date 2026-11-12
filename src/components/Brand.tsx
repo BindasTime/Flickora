@@ -1,9 +1,8 @@
 import { useId } from 'react';
 
 /**
- * Cinevra mark: a gradient "C" aperture with a white play glyph.
- * The same geometry is used for build/icon.svg so the app icon and the
- * in-app wordmark stay visually identical.
+ * Flickora mark: a cinematic midnight tile with a coral F-shaped play mark.
+ * Used in the top app bar and the About screen.
  */
 export function BrandMark({ size = 28 }: { size?: number }) {
   const uid = useId().replace(/:/g, '');
@@ -15,30 +14,33 @@ export function BrandMark({ size = 28 }: { size?: number }) {
       height={size}
       viewBox="0 0 48 48"
       role="img"
-      aria-label="HaseebFlix logo"
+      aria-label="Flickora logo"
       className="brand-mark"
     >
       <defs>
         <linearGradient id={gradient} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#FF416C" />
-          <stop offset="50%" stopColor="#E50914" />
-          <stop offset="100%" stopColor="#CBA6FF" />
+          <stop offset="0%" stopColor="#ff795f" />
+          <stop offset="100%" stopColor="#ef3f4f" />
         </linearGradient>
       </defs>
-      <rect x="2" y="2" width="44" height="44" rx="14" fill="#1C1B22" stroke="#49454F" strokeWidth="1.5" />
-      <path
-        d="M19 14.5 C19 13.2 20.4 12.4 21.5 13.1 L33.2 21.6 C34.2 22.3 34.2 23.7 33.2 24.4 L21.5 32.9 C20.4 33.6 19 32.8 19 31.5 Z"
-        fill={`url(#${gradient})`}
-      />
+      <rect x="2" y="2" width="44" height="44" rx="14" fill="#11131b" />
+      <rect x="2.7" y="2.7" width="42.6" height="42.6" rx="13.3" fill="none" stroke="#ffffff" strokeOpacity=".1" />
+      <path d="M17 13v22M18 14h16M18 23h12" stroke={`url(#${gradient})`} strokeWidth="5" strokeLinecap="round" />
+      <path d="m25 27 9 5-9 5z" fill="#fff0e7" />
     </svg>
   );
+}
+
+/** Compact Flickora tile used in the top app bar. */
+export function HeaderMark({ size = 28 }: { size?: number }) {
+  return <BrandMark size={size} />;
 }
 
 export function Wordmark({ compact = false }: { compact?: boolean }) {
   return (
     <span className="wordmark">
-      <span className="wordmark-main">HASEEB</span>
-      <span className="wordmark-accent">FLIX</span>
+      <span className="wordmark-main">FLICK</span>
+      <span className="wordmark-accent">ORA</span>
       {!compact && <span className="wordmark-dot" aria-hidden="true" />}
     </span>
   );

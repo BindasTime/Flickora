@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import {
-  ArrowLeft,
   Bookmark,
   Calendar,
   Check,
@@ -12,7 +11,6 @@ import {
   ExternalLink,
   FileJson,
   Film,
-  Heart,
   ImageIcon,
   Images,
   Info,
@@ -46,17 +44,19 @@ import type { MediaDetails, MediaType, SeasonDetails } from '../lib/types';
 import { MediaRow } from '../components/MediaRow';
 import { ErrorState, InlineLoader } from '../components/States';
 
+type Tab = 'episodes' | 'more' | 'details';
+
 function DetailsSkeleton() {
   return (
     <div className="details-page details-skeleton" aria-hidden="true">
-      <div className="details-hero skeleton-hero">
+      <div className="details-hero">
+        <div className="shimmer details-backdrop" />
         <div className="details-shell">
-          <div className="shimmer details-poster" />
+          <div className="shimmer details-poster-wrap" />
           <div className="details-main">
             <div className="shimmer line short" />
             <div className="shimmer line title" />
             <div className="shimmer line medium" />
-            <div className="shimmer line long" />
             <div className="shimmer line long" />
             <div className="shimmer button-shape" />
           </div>
@@ -78,10 +78,12 @@ export function Details() {
   );
   const { progress, toggleWishlist, isWishlisted, toast } = useApp();
   const [season, setSeason] = useState<number | null>(null);
+  const [activeEpisode, setActiveEpisode] = useState<{ season: number; episode: number } | null>(null);
+  const [tab, setTab] = useState<Tab>('details');
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
   const [downloadOpen, setDownloadOpen] = useState(false);
   const [downloading, setDownloading] = useState<string | null>(null);
-  const episodesRef = useRef<HTMLElement | null>(null);
+  const episodesRef = useRef<HTMLDivElement | null>(null);
 
   const seasonData = useAsync<SeasonDetails | null>(
     () => (mediaType === 'tv' && season ? fetchSeason(id, season) : Promise.resolve(null)),
@@ -134,6 +136,7 @@ export function Details() {
 
   useEffect(() => {
     if (!details) return;
+    if (mediaType === 'tv') setTab('episodes');
     const wantsEpisodes = searchParams.get('episodes') || searchParams.get('play');
     if (!wantsEpisodes || mediaType !== 'tv') return;
     const timer = window.setTimeout(() => {
@@ -160,20 +163,21 @@ export function Details() {
   if (error || !details) {
     return (
       <div className="page">
-        <button type="button" className="back-link" onClick={() => navigate(-1)}>
-          <ArrowLeft size={16} /> Back
+        <button type="button" className="back-link text-button" onClick={() => navigate(-1)}>
+          ← Back
         </button>
         <ErrorState message={error || 'This title could not be loaded.'} onRetry={reload} />
       </div>
     );
   }
 
-  const year = yearOf(details.releaseDate || details.releaseDate);
+  const year = yearOf(details.releaseDate || details.firstAirDate);
   const runtime =
     mediaType === 'movie'
       ? formatRuntime(details.runtime)
       : formatRuntime(details.episodeRunTime[0] || null);
   const networks = details.networks.map((network) => network.name).join(', ');
+  const match = details.voteAverage > 0 ? Math.round(details.voteAverage * 10) : 0;
   const crew = details.crew
     .filter((member) =>
       ['Director', 'Creator', 'Writer', 'Screenplay', 'Story', 'Executive Producer'].includes(
@@ -193,52 +197,40 @@ export function Details() {
     if (next) setTrailerKey(next);
   };
 
-  const playMovie = () => {
-    navigate(`/watch/movie/${details.id}?title=${encodeURIComponent(details.title)}`);
-  };
-
-  const playFirstEpisode = () => {
-    const first = seasonData.data?.episodes[0];
-    if (first) {
-      navigate(
-        `/watch/tv/${details.id}?season=${first.seasonNumber}&episode=${first.episodeNumber}&title=${encodeURIComponent(first.name)}`,
-      );
-      return;
-    }
-    episodesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
-
-  const mainPlay = () => {
-    if (mediaType === 'movie') return playMovie();
-    if (resume) {
-      navigate(
-        `/watch/tv/${details.id}?season=${resume.season ?? 1}&episode=${resume.episode ?? 1}&title=${encodeURIComponent(resume.episodeTitle || details.title)}`,
-      );
-      return;
-    }
-    playFirstEpisode();
-  };
-
-  const playEpisode = (seasonNumber: number, episodeNumber: number, name: string) => {
-    navigate(
-      `/watch/tv/${details.id}?season=${seasonNumber}&episode=${episodeNumber}&title=${encodeURIComponent(name)}`,
-    );
-  };
+  const activeSeasonNum = activeEpisode?.season ?? resume?.season ?? 1;
+  const activeEpisodeNum = activeEpisode?.episode ?? resume?.episode ?? 1;
 
   const playLabel = resume
     ? mediaType === 'tv'
       ? `Resume ${episodeCode(resume.season, resume.episode)}`
       : 'Resume movie'
     : mediaType === 'tv'
-      ? 'Play first episode'
-      : 'Play movie';
+      ? 'Play S1:E1'
+      : 'Play';
+
+  const mainPlay = () => {
+    if (mediaType === 'movie') {
+      navigate(`/watch/movie/${details.id}?title=${encodeURIComponent(details.title)}`);
+    } else {
+      navigate(
+        `/watch/tv/${details.id}?season=${activeSeasonNum}&episode=${activeEpisodeNum}&title=${encodeURIComponent(details.title)}`,
+      );
+    }
+  };
+
+  const playEpisode = (seasonNumber: number, episodeNumber: number, name: string) => {
+    setActiveEpisode({ season: seasonNumber, episode: episodeNumber });
+    navigate(
+      `/watch/tv/${details.id}?season=${seasonNumber}&episode=${episodeNumber}&title=${encodeURIComponent(name)}`,
+    );
+  };
 
   const fileSlug =
     details.title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '')
-      .slice(0, 60) || `cinevra-${mediaType}-${details.id}`;
+      .slice(0, 60) || `haseebflix-${mediaType}-${details.id}`;
 
   const saveDownload = async (label: string, action: () => Promise<{ ok: boolean; canceled?: boolean; error?: string }>) => {
     setDownloading(label);
@@ -275,7 +267,7 @@ export function Details() {
   const saveMetadata = () => {
     const content = JSON.stringify(
       {
-        app: 'HaseebFlix',
+        app: 'Flickora',
         exportedAt: new Date().toISOString(),
         mediaType,
         audio: audio.data?.ok ? audio.data : null,
@@ -288,6 +280,12 @@ export function Details() {
       hf.download.text({ filename: `${fileSlug}-details.json`, content }),
     );
   };
+
+  const tabs: { value: Tab; label: string }[] = [
+    ...(mediaType === 'tv' ? [{ value: 'episodes' as Tab, label: 'Episodes' }] : []),
+    { value: 'more', label: 'More Like This' },
+    { value: 'details', label: 'Details & More' },
+  ];
 
   return (
     <div className="details-page">
@@ -317,9 +315,8 @@ export function Details() {
             )}
             {details.voteAverage > 0 && (
               <div className="details-score">
-                <Star size={18} fill="currentColor" />
+                <Star size={14} fill="currentColor" />
                 <strong>{formatScore(details.voteAverage)}</strong>
-                <span>/ 10</span>
               </div>
             )}
           </div>
@@ -343,6 +340,7 @@ export function Details() {
             {details.tagline && <p className="details-tagline">“{details.tagline}”</p>}
 
             <div className="details-meta">
+              {match > 0 && <span className="match">{match}% Match</span>}
               {year && (
                 <span>
                   <Calendar size={13} /> {year}
@@ -371,33 +369,33 @@ export function Details() {
               ))}
             </div>
 
-            <p className="details-overview hero-overview-text">
+            <p className="details-overview">
               {details.overview || 'No overview is available for this title yet.'}
             </p>
 
             <div className="details-actions">
-              <button type="button" className="button primary details-play-btn" onClick={mainPlay}>
+              <button type="button" className="button details-play-btn" onClick={mainPlay}>
                 <Play size={18} fill="currentColor" /> {playLabel}
               </button>
               <div className="details-secondary-row">
                 <button
                   type="button"
-                  className={`button glass details-sec-btn${wished ? ' wished' : ''}`}
+                  className={`button details-sec-btn${wished ? ' wished' : ''}`}
                   onClick={() => toggleWishlist(details)}
                 >
                   {wished ? <Check size={16} /> : <Bookmark size={16} />}
                   {wished ? 'In My List' : 'My List'}
                 </button>
                 {featuredTrailer && (
-                  <button type="button" className="button glass details-sec-btn" onClick={() => openTrailer()}>
+                  <button type="button" className="button details-sec-btn" onClick={() => openTrailer()}>
                     <Clapperboard size={16} /> Trailer
                   </button>
                 )}
-                <button type="button" className="button glass details-sec-btn" onClick={() => setDownloadOpen(true)}>
+                <button type="button" className="button details-sec-btn" onClick={() => setDownloadOpen(true)}>
                   <Download size={16} /> Download
                 </button>
                 {details.homepage && (
-                  <a className="button glass details-sec-btn icon-only" href={details.homepage} target="_blank" rel="noreferrer" aria-label="Official website">
+                  <a className="button details-sec-btn icon-only" href={details.homepage} target="_blank" rel="noreferrer" aria-label="Official website">
                     <ExternalLink size={16} />
                   </a>
                 )}
@@ -407,9 +405,155 @@ export function Details() {
         </div>
       </section>
 
-      <div className="page-body details-body">
-        <div className="details-grid">
-          <div className="details-left">
+      <div className="details-tabs" role="tablist" aria-label="Title sections">
+        {tabs.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            role="tab"
+            aria-selected={tab === item.value}
+            className={`details-tab${tab === item.value ? ' active' : ''}`}
+            onClick={() => setTab(item.value)}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="details-body">
+        {tab === 'episodes' && mediaType === 'tv' && (
+          <section className="details-section" ref={episodesRef}>
+            <div className="section-head">
+              <h2>Episodes</h2>
+              <span className="section-note">
+                {details.numberOfEpisodes} episode{details.numberOfEpisodes === 1 ? '' : 's'}
+              </span>
+            </div>
+
+            <div className="season-chips hide-scrollbar" role="tablist" aria-label="Seasons">
+              {details.seasons.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={season === item.seasonNumber}
+                  className={`season-chip${season === item.seasonNumber ? ' active' : ''}`}
+                  onClick={() => setSeason(item.seasonNumber)}
+                >
+                  <strong>Season {item.seasonNumber}</strong>
+                  <span>{item.episodeCount} eps</span>
+                </button>
+              ))}
+            </div>
+
+            {seasonData.loading ? (
+              <InlineLoader label="Loading episodes" />
+            ) : seasonData.error ? (
+              <ErrorState message={seasonData.error} onRetry={seasonData.reload} />
+            ) : seasonData.data ? (
+              <>
+                {seasonData.data.overview && (
+                  <p className="season-overview">{seasonData.data.overview}</p>
+                )}
+                <div className="episode-list">
+                  {seasonData.data.episodes.map((episode) => {
+                    const saved = progress.find(
+                      (entry) =>
+                        entry.mediaType === 'tv' &&
+                        entry.id === id &&
+                        entry.season === episode.seasonNumber &&
+                        entry.episode === episode.episodeNumber,
+                    );
+                    const isCurrent =
+                      resume?.season === episode.seasonNumber &&
+                      resume?.episode === episode.episodeNumber;
+                    return (
+                      <article
+                        key={episode.id}
+                        className={`episode-row${isCurrent ? ' current' : ''}`}
+                      >
+                        <button
+                          type="button"
+                          className="episode-still"
+                          onClick={() =>
+                            playEpisode(episode.seasonNumber, episode.episodeNumber, episode.name)
+                          }
+                          aria-label={`Play ${episode.name}`}
+                        >
+                          {episode.stillPath ? (
+                            <img src={stillUrl(episode.stillPath, 'w300') || ''} alt="" loading="lazy" />
+                          ) : (
+                            <span className="still-fallback">
+                              <Clapperboard size={20} />
+                            </span>
+                          )}
+                          <span className="episode-play">
+                            <Play size={16} fill="currentColor" />
+                          </span>
+                          {saved?.percent ? (
+                            <span className="episode-progress">
+                              <span style={{ width: `${Math.min(100, saved.percent)}%` }} />
+                            </span>
+                          ) : null}
+                        </button>
+
+                        <div className="episode-info">
+                          <div className="episode-title-row">
+                            <span className="episode-code">
+                              {episodeCode(episode.seasonNumber, episode.episodeNumber)}
+                            </span>
+                            <h3>{episode.name}</h3>
+                            {isCurrent && <span className="now-pill">Watching</span>}
+                          </div>
+                          <div className="episode-meta">
+                            {episode.airDate && <span>{episode.airDate}</span>}
+                            {episode.runtime ? <span>{formatRuntime(episode.runtime)}</span> : null}
+                            {episode.voteAverage > 0 && (
+                              <span className="episode-rating">
+                                <Star size={11} fill="currentColor" /> {formatScore(episode.voteAverage)}
+                              </span>
+                            )}
+                          </div>
+                          <p>{episode.overview || 'No episode description yet.'}</p>
+                        </div>
+
+                        <button
+                          type="button"
+                          className="icon-button bordered episode-row-play"
+                          aria-label={`Play ${episode.name}`}
+                          onClick={() =>
+                            playEpisode(episode.seasonNumber, episode.episodeNumber, episode.name)
+                          }
+                        >
+                          <Play size={16} fill="currentColor" />
+                        </button>
+                      </article>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              <p className="muted">Select a season to see its episodes.</p>
+            )}
+          </section>
+        )}
+
+        {tab === 'more' && (
+          <div className="details-section">
+            {details.recommendations.length > 0 ? (
+              <MediaRow
+                title="More Like This"
+                items={details.recommendations}
+                seeAllTo={`/${mediaType === 'movie' ? 'movies' : 'tv'}`}
+              />
+            ) : (
+              <p className="muted">No recommendations available for this title.</p>
+            )}
+          </div>
+        )}
+
+        {tab === 'details' && (
+          <>
             <section className="details-section">
               <div className="section-head">
                 <h2>Storyline</h2>
@@ -424,7 +568,7 @@ export function Details() {
                 </div>
                 <div>
                   <dt>{mediaType === 'movie' ? 'Release date' : 'First aired'}</dt>
-                  <dd>{details.firstAirDate || year || '—'}</dd>
+                  <dd>{details.releaseDate || details.firstAirDate || '—'}</dd>
                 </div>
                 {mediaType === 'tv' && details.lastAirDate && (
                   <div>
@@ -438,123 +582,6 @@ export function Details() {
                 </div>
               </dl>
             </section>
-
-            {mediaType === 'tv' && (
-              <section className="details-section episodes-section" ref={episodesRef}>
-                <div className="section-head">
-                  <h2>Episodes</h2>
-                  <span className="section-note">
-                    {details.numberOfEpisodes} episode{details.numberOfEpisodes === 1 ? '' : 's'}
-                  </span>
-                </div>
-
-                <div className="season-chips hide-scrollbar" role="tablist" aria-label="Seasons">
-                  {details.seasons.map((item) => (
-                    <button
-                      key={item.id}
-                      type="button"
-                      role="tab"
-                      aria-selected={season === item.seasonNumber}
-                      className={`season-chip${season === item.seasonNumber ? ' active' : ''}`}
-                      onClick={() => setSeason(item.seasonNumber)}
-                    >
-                      <strong>Season {item.seasonNumber}</strong>
-                      <span>{item.episodeCount} eps</span>
-                    </button>
-                  ))}
-                </div>
-
-                {seasonData.loading ? (
-                  <InlineLoader label="Loading episodes" />
-                ) : seasonData.error ? (
-                  <ErrorState message={seasonData.error} onRetry={seasonData.reload} />
-                ) : seasonData.data ? (
-                  <>
-                    {seasonData.data.overview && (
-                      <p className="season-overview">{seasonData.data.overview}</p>
-                    )}
-                    <div className="episode-list">
-                      {seasonData.data.episodes.map((episode) => {
-                        const saved = progress.find(
-                          (entry) =>
-                            entry.mediaType === 'tv' &&
-                            entry.id === id &&
-                            entry.season === episode.seasonNumber &&
-                            entry.episode === episode.episodeNumber,
-                        );
-                        const isCurrent =
-                          resume?.season === episode.seasonNumber &&
-                          resume?.episode === episode.episodeNumber;
-                        return (
-                          <article
-                            key={episode.id}
-                            className={`episode-row${isCurrent ? ' current' : ''}`}
-                          >
-                            <button
-                              type="button"
-                              className="episode-still"
-                              onClick={() =>
-                                playEpisode(episode.seasonNumber, episode.episodeNumber, episode.name)
-                              }
-                              aria-label={`Play ${episode.name}`}
-                            >
-                              {episode.stillPath ? (
-                                <img src={stillUrl(episode.stillPath, 'w300') || ''} alt="" loading="lazy" />
-                              ) : (
-                                <span className="still-fallback">
-                                  <Clapperboard size={20} />
-                                </span>
-                              )}
-                              <span className="episode-play">
-                                <Play size={16} fill="currentColor" />
-                              </span>
-                              {saved?.percent ? (
-                                <span className="episode-progress">
-                                  <span style={{ width: `${Math.min(100, saved.percent)}%` }} />
-                                </span>
-                              ) : null}
-                            </button>
-
-                            <div className="episode-info">
-                              <div className="episode-title-row">
-                                <span className="episode-code">
-                                  {episodeCode(episode.seasonNumber, episode.episodeNumber)}
-                                </span>
-                                <h3>{episode.name}</h3>
-                                {isCurrent && <span className="now-pill">Watching</span>}
-                              </div>
-                              <div className="episode-meta">
-                                {episode.airDate && <span>{episode.airDate}</span>}
-                                {episode.runtime ? <span>{formatRuntime(episode.runtime)}</span> : null}
-                                {episode.voteAverage > 0 && (
-                                  <span className="episode-rating">
-                                    <Star size={11} fill="currentColor" /> {formatScore(episode.voteAverage)}
-                                  </span>
-                                )}
-                              </div>
-                              <p>{episode.overview || 'No episode description yet.'}</p>
-                            </div>
-
-                            <button
-                              type="button"
-                              className="icon-button bordered episode-row-play"
-                              aria-label={`Play ${episode.name}`}
-                              onClick={() =>
-                                playEpisode(episode.seasonNumber, episode.episodeNumber, episode.name)
-                              }
-                            >
-                              <Play size={16} fill="currentColor" />
-                            </button>
-                          </article>
-                        );
-                      })}
-                    </div>
-                  </>
-                ) : (
-                  <p className="muted">Select a season to see its episodes.</p>
-                )}
-              </section>
-            )}
 
             {details.cast.length > 0 && (
               <section className="details-section">
@@ -579,18 +606,6 @@ export function Details() {
               </section>
             )}
 
-            {details.recommendations.length > 0 && (
-              <div className="details-recommendations">
-                <MediaRow
-                  title="More like this"
-                  items={details.recommendations}
-                  seeAllTo={`/${mediaType === 'movie' ? 'movies' : 'tv'}`}
-                />
-              </div>
-            )}
-          </div>
-
-          <aside className="details-side">
             <section className="side-card">
               <h3>
                 <Info size={15} /> Details
@@ -694,11 +709,11 @@ export function Details() {
 
             {wished && (
               <p className="side-note">
-                <Check size={14} /> Saved to your wishlist
+                <Check size={14} /> Saved to your list
               </p>
             )}
-          </aside>
-        </div>
+          </>
+        )}
       </div>
 
       {trailerKey && (
@@ -813,7 +828,7 @@ export function Details() {
             <p className="download-note">
               <Info size={15} />
               <span>
-                Video files cannot be saved. HaseebFlix plays titles through the VidRift embed, which
+                Video files cannot be saved. Flickora plays titles through the VidRift embed, which
                 streams the video and does not expose a downloadable file.
               </span>
             </p>

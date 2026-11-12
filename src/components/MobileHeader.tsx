@@ -1,20 +1,32 @@
+import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bell, Search, Settings, User, WifiOff } from 'lucide-react';
-import { BrandMark } from './Brand';
+import { ArrowLeft, Search, Settings, User, WifiOff } from 'lucide-react';
+import { HeaderMark } from './Brand';
 import { useApp } from '../state/AppState';
 
 export function MobileHeader() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { offline, wishlist } = useApp();
+  const { offline } = useApp();
+  const headerRef = useRef<HTMLElement | null>(null);
+  const [scrolled, setScrolled] = useState(false);
 
   const isSubPage =
     location.pathname.startsWith('/title/') ||
     location.pathname === '/settings' ||
     location.pathname === '/about';
 
+  useEffect(() => {
+    const scroller = headerRef.current?.closest('.mobile-main-scroll');
+    if (!scroller) return;
+    const onScroll = () => setScrolled(scroller.scrollTop > 8);
+    scroller.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return () => scroller.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
-    <header className="mobile-header">
+    <header className={`mobile-header${scrolled ? ' scrolled' : ''}`} ref={headerRef}>
       <div className="mobile-header-left">
         {isSubPage ? (
           <div className="mobile-subpage-header">
@@ -36,17 +48,14 @@ export function MobileHeader() {
               {location.pathname === '/settings'
                 ? 'Settings'
                 : location.pathname === '/about'
-                ? 'About'
-                : 'Details'}
+                  ? 'About'
+                  : 'Details'}
             </span>
           </div>
         ) : (
           <div className="mobile-brand-wrap" onClick={() => navigate('/')}>
-            <BrandMark size={32} />
-            <div className="mobile-brand-copy">
-              <span className="brand-title">HaseebFlix</span>
-              <span className="brand-subtitle">OTT Platform</span>
-            </div>
+            <HeaderMark size={28} />
+            <span className="brand-title">Flickora</span>
           </div>
         )}
       </div>
@@ -65,16 +74,7 @@ export function MobileHeader() {
               onClick={() => navigate('/search')}
               aria-label="Search"
             >
-              <Search size={19} />
-            </button>
-            <button
-              type="button"
-              className="mobile-icon-btn notif-btn"
-              onClick={() => navigate('/wishlist')}
-              aria-label="My List"
-            >
-              <Bell size={19} />
-              {wishlist.length > 0 && <span className="notif-dot" />}
+              <Search size={20} />
             </button>
             <button
               type="button"

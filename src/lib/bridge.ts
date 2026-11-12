@@ -1,4 +1,5 @@
 import type { AppState } from './types';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 
 export interface TmdbResponse<T> {
   ok: boolean;
@@ -31,6 +32,13 @@ export interface AudioLookupResult {
   throttled?: boolean;
   error?: string;
 }
+
+interface ImmersiveModePlugin {
+  setEnabled(options: { enabled: boolean }): Promise<void>;
+  setPlaybackMode(options: { enabled: boolean }): Promise<void>;
+}
+
+const immersiveModePlugin = registerPlugin<ImmersiveModePlugin>('ImmersiveMode');
 
 interface HfBridge {
   tmdb: <T>(path: string, query?: Record<string, string | number | boolean>) => Promise<TmdbResponse<T>>;
@@ -76,6 +84,26 @@ declare global {
 }
 
 export const hasBridge = typeof window !== 'undefined' && Boolean(window.hf);
+
+/** Hides Android system bars for landscape playback when running in Capacitor. */
+export async function setImmersiveMode(enabled: boolean): Promise<void> {
+  if (!Capacitor.isNativePlatform()) return;
+  try {
+    await immersiveModePlugin.setEnabled({ enabled });
+  } catch (error) {
+    console.warn('Unable to update immersive mode', error);
+  }
+}
+
+/** Locks the native app to portrait except while the movie player is open. */
+export async function setPlaybackOrientation(enabled: boolean): Promise<void> {
+  if (!Capacitor.isNativePlatform()) return;
+  try {
+    await immersiveModePlugin.setPlaybackMode({ enabled });
+  } catch (error) {
+    console.warn('Unable to update playback orientation', error);
+  }
+}
 
 /** Browser/Capacitor fallback so the UI also runs in mobile and web. */
 const STORAGE_KEY = 'haseebflix_state';

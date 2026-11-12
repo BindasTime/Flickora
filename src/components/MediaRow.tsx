@@ -12,9 +12,10 @@ interface MediaRowProps {
   seeAllTo?: string;
   ranked?: boolean;
   subtitle?: string;
+  rankStart?: number;
 }
 
-export function MediaRow({ title, items, loading, seeAllTo, ranked, subtitle }: MediaRowProps) {
+export function MediaRow({ title, items, loading, seeAllTo, ranked, subtitle, rankStart = 1 }: MediaRowProps) {
   const scroller = useRef<HTMLDivElement | null>(null);
 
   const scroll = (direction: number) => {
@@ -54,7 +55,7 @@ export function MediaRow({ title, items, loading, seeAllTo, ranked, subtitle }: 
               <MediaCard
                 key={`${item.mediaType}-${item.id}`}
                 media={item}
-                rank={ranked ? index + 1 : undefined}
+                rank={ranked ? rankStart + index : undefined}
                 className={ranked ? 'ranked' : ''}
               />
             ))}

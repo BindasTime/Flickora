@@ -112,7 +112,7 @@ export function Settings() {
 
   const reset = async () => {
     const confirmed = await hf.confirm({
-      title: 'Reset HaseebFlix',
+      title: 'Reset Flickora',
       message: 'Reset settings, wishlist, watch progress, and recent searches?',
       detail: 'This cannot be undone.',
     });
@@ -289,7 +289,7 @@ export function Settings() {
           />
           <Toggle
             label="Player branding"
-            help="Show the HaseebFlix name and red accent inside the player."
+            help="Show the Flickora name and coral accent inside the player."
             checked={settings.playerBranding}
             onChange={(value) => void updateSettings({ playerBranding: value })}
           />
@@ -407,7 +407,7 @@ export function Settings() {
 
           <div className="link-list">
             <button type="button" className="link-row" onClick={() => void hf.openExternal(SOURCE_REPO)}>
-              HaseebFlix on GitHub
+              Source code on GitHub
             </button>
             <button type="button" className="link-row" onClick={() => void hf.openExternal(PRIVACY_URL)}>
               Privacy policy

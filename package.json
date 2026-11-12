@@ -1,8 +1,8 @@
 {
   "name": "haseebflix-mobile",
-  "productName": "HaseebFlix",
-  "version": "1.0.0",
-  "description": "HaseebFlix Android Mobile App for movies and TV shows",
+  "productName": "Flickora",
+  "version": "1.2.0",
+  "description": "Flickora mobile app for movies and TV series",
   "private": true,
   "type": "module",
   "scripts": {

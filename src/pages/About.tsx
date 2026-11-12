@@ -87,14 +87,14 @@ const FEATURES = [
 ];
 
 const DESKTOP_FACTS = [
-  ['App', 'HaseebFlix Mobile 1.0.0'],
+  ['App', 'Flickora Mobile 1.2.0'],
   ['Package', 'com.haseebflix.mobile'],
   ['Platform', 'Android · Capacitor · React · TypeScript'],
   ['Metadata', 'TMDB REST API v3'],
   ['Playback', 'VidRift embed player'],
   ['Filters', 'Category, genre, origin country, dual audio'],
   ['Downloads', 'Poster, backdrop, metadata JSON'],
-  ['Data folder', 'HaseebFlix App Storage'],
+  ['Data folder', 'Flickora App Storage'],
 ];
 
 export function About() {
@@ -135,7 +135,7 @@ export function About() {
               <strong>{progress.length}</strong> watch entries
             </span>
             <span>
-              <strong>v1.0.0</strong> desktop
+              <strong>v1.2.0</strong> mobile
             </span>
           </div>
         </div>
@@ -209,7 +209,7 @@ export function About() {
             ))}
           </dl>
           <p className="about-note">
-            HaseebFlix is an open personal mobile streaming client. It reads the public TMDB catalogue,
+            Flickora is an open personal mobile streaming client. It reads the public TMDB catalogue,
             keeps your library on this device, and embeds the VidRift player for playback. It does not
             host or distribute video.
           </p>
@@ -236,7 +236,7 @@ export function About() {
             </button>
             <button type="button" className="credit-row" onClick={() => void hf.openExternal(SOURCE_REPO)}>
               <span>
-                <strong>HaseebFlix on GitHub</strong>
+                <strong>Source code on GitHub</strong>
                 <small>Source code and release notes</small>
               </span>
               <ArrowUpRight size={16} />
@@ -244,7 +244,7 @@ export function About() {
             <button type="button" className="credit-row" onClick={() => void hf.openExternal(PRIVACY_URL)}>
               <span>
                 <strong>Privacy policy</strong>
-                <small>How HaseebFlix handles your data</small>
+                <small>How Flickora handles your data</small>
               </span>
               <ArrowUpRight size={16} />
             </button>
@@ -259,7 +259,7 @@ export function About() {
           <div className="disclaimer">
             <ShieldCheck size={16} />
             <p>
-              HaseebFlix is an unofficial, personal-use client. It does not host, store, or distribute
+              Flickora is an unofficial, personal-use client. It does not host, store, or distribute
               video. All metadata belongs to TMDB and all playback is provided by VidRift. If you
               enjoy something you find here, watch it on an official service.
             </p>
