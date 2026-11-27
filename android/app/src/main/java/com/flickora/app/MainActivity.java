@@ -1,4 +1,4 @@
-package com.haseebflix.mobile;
+package com.flickora.app;
 
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;

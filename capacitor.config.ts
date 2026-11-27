@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.haseebflix.mobile',
+  appId: 'com.flickora.app',
   appName: 'Flickora',
   webDir: 'dist',
   server: {

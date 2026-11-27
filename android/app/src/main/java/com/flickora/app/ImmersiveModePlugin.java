@@ -1,4 +1,4 @@
-package com.haseebflix.mobile;
+package com.flickora.app;
 
 import android.os.Build;
 import android.view.View;

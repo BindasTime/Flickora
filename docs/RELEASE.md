@@ -3,8 +3,9 @@
 ## Version
 
 - `package.json` / `package-lock.json`: `2.0.3`
-- Android `versionCode`: `3`
+- Android `versionCode`: `6`
 - Android `versionName`: `2.0.3`
+- Android package / applicationId: `com.flickora.app`
 - Signed outputs:
   - `release/Flickora-v2.0.3.apk`
   - `release/Flickora-v2.0.3.aab`

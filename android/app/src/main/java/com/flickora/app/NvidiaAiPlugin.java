@@ -1,4 +1,4 @@
-package com.haseebflix.mobile;
+package com.flickora.app;
 
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
