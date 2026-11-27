@@ -311,9 +311,7 @@
   padding: 3px 7px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(8, 8, 12, 0.66);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(8, 8, 12, 0.82);
   font-size: 9.5px;
   letter-spacing: 0.01em;
 }
@@ -338,8 +336,7 @@
 
 .poster-actions {
   z-index: 3;
-  background: linear-gradient(180deg, rgba(4, 4, 8, 0.5), rgba(4, 4, 8, 0.78));
-  backdrop-filter: blur(2px);
+  background: linear-gradient(180deg, rgba(4, 4, 8, 0.72), rgba(4, 4, 8, 0.9));
 }
 
 /* ---------- Continue watching ---------- */
@@ -403,10 +400,9 @@
   z-index: 30;
   margin-inline: calc(-1 * var(--content-pad));
   padding-inline: var(--content-pad);
-  background: linear-gradient(180deg, rgba(7, 7, 11, 0.96), rgba(7, 7, 11, 0.72));
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: top 300ms var(--motion-emphasized);
+  background: linear-gradient(180deg, rgba(7, 7, 11, 0.82), rgba(7, 7, 11, 0.58));
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 /* Once the top bar slides away, the sticky filters own the very top. */
@@ -570,9 +566,9 @@
   padding-bottom: 0;
   border: 1px solid var(--glass-stroke);
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(27, 27, 35, 0.94), rgba(12, 12, 17, 0.97));
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
+  background: linear-gradient(180deg, rgba(27, 27, 35, 0.72), rgba(12, 12, 17, 0.82));
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
   box-shadow:
     0 22px 48px -20px rgba(0, 0, 0, 0.92),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -994,13 +990,13 @@ html[data-reduce-motion="true"] .page-transition {
 /* ---------- Optional liquid-glass navigation ---------- */
 
 :root[data-glass-nav="true"] .mobile-bottom-nav {
-  border: 0;
-  background: linear-gradient(180deg, rgba(22, 22, 30, 0.84), rgba(8, 8, 13, 0.92));
-  backdrop-filter: blur(30px) saturate(170%);
-  -webkit-backdrop-filter: blur(30px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: linear-gradient(180deg, rgba(28, 28, 38, 0.55), rgba(10, 10, 16, 0.66));
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
   box-shadow:
-    0 24px 60px -18px rgba(0, 0, 0, 0.78),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+    0 24px 60px -18px rgba(0, 0, 0, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 :root[data-glass-nav="true"] .bottom-nav-item,
@@ -1021,10 +1017,10 @@ html[data-reduce-motion="true"] .page-transition {
 }
 
 :root[data-glass-nav="true"] .mobile-header.scrolled {
-  background: linear-gradient(180deg, rgba(12, 12, 18, 0.92), rgba(8, 8, 12, 0.84));
+  background: linear-gradient(180deg, rgba(14, 14, 20, 0.62), rgba(8, 8, 12, 0.5));
   border-bottom: 0;
-  backdrop-filter: blur(26px) saturate(180%);
-  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
   box-shadow: 0 10px 30px -24px rgba(0, 0, 0, 0.95);
 }
 

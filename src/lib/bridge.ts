@@ -36,6 +36,7 @@ export interface AudioLookupResult {
 interface ImmersiveModePlugin {
   setEnabled(options: { enabled: boolean }): Promise<void>;
   setPlaybackMode(options: { enabled: boolean }): Promise<void>;
+  getSafeInsets(): Promise<{ top: number; bottom: number }>;
 }
 
 const immersiveModePlugin = registerPlugin<ImmersiveModePlugin>('ImmersiveMode');
@@ -94,6 +95,23 @@ export async function setImmersiveMode(enabled: boolean): Promise<void> {
     await immersiveModePlugin.setEnabled({ enabled });
   } catch (error) {
     console.warn('Unable to update immersive mode', error);
+  }
+}
+
+/**
+ * Android 15+ can lay the WebView out under the system bars. CSS
+ * safe-area-inset does not report status-bar height on Android, so the native
+ * side measures the real overlap and we mirror it into the layout tokens.
+ */
+export async function syncNativeSafeInsets(): Promise<void> {
+  if (!Capacitor.isNativePlatform() || !hasImmersiveMode) return;
+  try {
+    const insets = await immersiveModePlugin.getSafeInsets();
+    const root = document.documentElement;
+    root.style.setProperty('--safe-top', `${Math.max(0, insets.top)}px`);
+    root.style.setProperty('--safe-bottom', `${Math.max(0, insets.bottom)}px`);
+  } catch (error) {
+    console.warn('Unable to read native safe insets', error);
   }
 }
 

@@ -27,9 +27,7 @@
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  scroll-behavior: smooth;
   padding-bottom: calc(var(--bottom-nav-h) + var(--safe-bottom) + 24px);
-  transform: translateZ(0);
 }
 
 .mobile-main-inner {
@@ -54,6 +52,8 @@
   height: calc(var(--header-h) + var(--safe-top));
   padding: var(--safe-top) 16px 0;
   background: transparent;
+  /* Hairline keeps the app bar visually separate from the dark status bar. */
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
   border-bottom: 1px solid transparent;
   transition:
     transform 300ms var(--motion-emphasized),
@@ -67,9 +67,9 @@
 }
 
 .mobile-header.scrolled {
-  background: rgba(11, 11, 15, 0.88);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(11, 11, 15, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom-color: var(--md-outline-variant);
 }
 
@@ -270,7 +270,7 @@
 }
 
 .mobile-header.scrolled {
-  background: rgba(11, 11, 15, .94);
+  background: rgba(11, 11, 15, .78);
   border-bottom-color: rgba(255, 255, 255, .08);
 }
 

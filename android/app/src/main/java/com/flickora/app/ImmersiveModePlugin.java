@@ -1,10 +1,12 @@
 package com.flickora.app;
 
+import android.graphics.Rect;
 import android.os.Build;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.Window;
+import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
@@ -20,6 +22,41 @@ public class ImmersiveModePlugin extends Plugin {
                 ((MainActivity) getActivity()).setPlaybackModeEnabled(enabled);
             }
             call.resolve();
+        });
+    }
+
+    /**
+     * Reports how much of the WebView is hidden behind opaque system bars, in
+     * CSS pixels. On older layouts this is zero because the WebView already
+     * sits below the status bar. On Android 15+ edge-to-edge builds it returns
+     * the real overlap so the web layer can pad the top bar instead of drawing
+     * its icons under the notification bar.
+     */
+    @PluginMethod
+    public void getSafeInsets(PluginCall call) {
+        getActivity().runOnUiThread(() -> {
+            JSObject result = new JSObject();
+            try {
+                View decor = getActivity().getWindow().getDecorView();
+                Rect frame = new Rect();
+                decor.getWindowVisibleDisplayFrame(frame);
+                // Measure the WebView itself: on some devices the decor is
+                // edge-to-edge while Capacitor already insets the WebView.
+                View target = getBridge() != null && getBridge().getWebView() != null
+                        ? getBridge().getWebView()
+                        : decor;
+                int[] location = new int[2];
+                target.getLocationOnScreen(location);
+                float density = getActivity().getResources().getDisplayMetrics().density;
+                double top = Math.max(0, frame.top - location[1]) / density;
+                double bottom = Math.max(0, location[1] + target.getHeight() - frame.bottom) / density;
+                result.put("top", top);
+                result.put("bottom", bottom);
+            } catch (Exception ignored) {
+                result.put("top", 0);
+                result.put("bottom", 0);
+            }
+            call.resolve(result);
         });
     }
 

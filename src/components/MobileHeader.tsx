@@ -10,6 +10,9 @@ export function MobileHeader() {
   const { offline } = useApp();
   const headerRef = useRef<HTMLElement | null>(null);
   const lastScrollY = useRef(0);
+  const scrolledRef = useRef(false);
+  const hiddenRef = useRef(false);
+  const frame = useRef(0);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
 
@@ -22,26 +25,47 @@ export function MobileHeader() {
     const scroller = headerRef.current?.closest('.mobile-main-scroll');
     if (!scroller) return;
     lastScrollY.current = scroller.scrollTop;
-    const onScroll = () => {
+    const update = () => {
+      frame.current = 0;
       const y = scroller.scrollTop;
       const delta = y - lastScrollY.current;
-      setScrolled(y > 8);
+
+      const nextScrolled = y > 8;
+      if (nextScrolled !== scrolledRef.current) {
+        scrolledRef.current = nextScrolled;
+        setScrolled(nextScrolled);
+      }
 
       // Hide only after a deliberate downward gesture; reveal immediately on
       // any upward gesture, at the top, or when the route changes below.
-      if (y < 56) setHidden(false);
-      else if (y > 120 && delta > 6) setHidden(true);
-      else if (delta < -6) setHidden(false);
+      let nextHidden = hiddenRef.current;
+      if (y < 56) nextHidden = false;
+      else if (y > 120 && delta > 6) nextHidden = true;
+      else if (delta < -6) nextHidden = false;
+      if (nextHidden !== hiddenRef.current) {
+        hiddenRef.current = nextHidden;
+        setHidden(nextHidden);
+      }
 
       if (Math.abs(delta) > 6 || y < 56) lastScrollY.current = y;
     };
+    // One state update per painted frame keeps the sticky glass layers from
+    // being re-laid out on every native scroll tick.
+    const onScroll = () => {
+      if (!frame.current) frame.current = requestAnimationFrame(update);
+    };
     scroller.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => scroller.removeEventListener('scroll', onScroll);
+    update();
+    return () => {
+      scroller.removeEventListener('scroll', onScroll);
+      if (frame.current) cancelAnimationFrame(frame.current);
+      frame.current = 0;
+    };
   }, []);
 
   useEffect(() => {
     lastScrollY.current = 0;
+    hiddenRef.current = false;
     setHidden(false);
   }, [location.pathname]);
 
@@ -55,7 +79,10 @@ export function MobileHeader() {
     <header
       className={`mobile-header${scrolled ? ' scrolled' : ''}${hidden ? ' is-hidden' : ''}`}
       ref={headerRef}
-      onFocusCapture={() => setHidden(false)}
+      onFocusCapture={() => {
+        hiddenRef.current = false;
+        setHidden(false);
+      }}
     >
       <div className="mobile-header-left">
         {isSubPage ? (
