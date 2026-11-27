@@ -395,20 +395,13 @@
 }
 
 .home-category-bar {
-  position: sticky;
-  top: calc(var(--header-h) + var(--safe-top));
-  z-index: 30;
+  position: relative;
+  z-index: 2;
   margin-inline: calc(-1 * var(--content-pad));
   padding-inline: var(--content-pad);
   background: linear-gradient(180deg, rgba(7, 7, 11, 0.82), rgba(7, 7, 11, 0.58));
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-}
-
-/* Once the top bar slides away, the sticky filters own the very top. */
-:root.topbar-hidden .home-category-bar,
-:root.topbar-hidden .details-tabs {
-  top: 0;
 }
 
 .button.primary {

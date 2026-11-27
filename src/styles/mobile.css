@@ -330,10 +330,6 @@
   margin-top: calc(-1 * (var(--header-h) + var(--safe-top)));
 }
 
-.details-tabs {
-  top: calc(var(--header-h) + var(--safe-top));
-}
-
 /* ==========================================================================
    Bottom navigation — Material 3 navigation bar
    ========================================================================== */

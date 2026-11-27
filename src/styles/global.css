@@ -2164,8 +2164,7 @@ button:disabled {
 
 /* Details tabs (Material 3 secondary tabs) */
 .details-tabs {
-  position: sticky;
-  top: var(--header-h);
+  position: relative;
   z-index: 20;
   display: flex;
   gap: 4px;
