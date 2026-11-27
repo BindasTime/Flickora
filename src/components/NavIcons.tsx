@@ -75,6 +75,17 @@ export function NavSearchIcon(props: IconProps) {
   );
 }
 
+export function NavListIcon(props: IconProps) {
+  return (
+    <Svg {...props}>
+      <path d="M5 7.25 8.4 5l3.4 2.25L8.4 9.5z" />
+      <path d="M5 12 8.4 9.75 11.8 12 8.4 14.25z" />
+      <path d="M5 16.75 8.4 14.5l3.4 2.25L8.4 19z" />
+      <path d="M13.8 6.6h5.3M13.8 11.35h5.3M13.8 16.1h5.3" />
+    </Svg>
+  );
+}
+
 export function NavSettingsIcon(props: IconProps) {
   return (
     <Svg {...props}>

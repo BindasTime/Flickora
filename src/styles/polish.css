@@ -76,8 +76,10 @@
 
 .mobile-icon-btn,
 .mobile-back-btn {
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(8, 8, 12, 0.32);
+  box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.9);
   backdrop-filter: blur(10px);
 }
 
@@ -986,15 +988,24 @@ html[data-reduce-motion="true"] .page-transition {
 
 :root[data-glass-nav="true"] .mobile-bottom-nav {
   border: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.055));
-  backdrop-filter: blur(30px) saturate(190%) brightness(1.06);
-  -webkit-backdrop-filter: blur(30px) saturate(190%) brightness(1.06);
-  box-shadow: 0 24px 60px -18px rgba(0, 0, 0, 0.6);
+  background: linear-gradient(180deg, rgba(22, 22, 30, 0.84), rgba(8, 8, 13, 0.92));
+  backdrop-filter: blur(30px) saturate(170%);
+  -webkit-backdrop-filter: blur(30px) saturate(170%);
+  box-shadow:
+    0 24px 60px -18px rgba(0, 0, 0, 0.78),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+:root[data-glass-nav="true"] .bottom-nav-item,
+:root[data-glass-nav="true"] .bottom-nav-icon,
+:root[data-glass-nav="true"] .bottom-nav-label {
+  color: #e9e7f0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
 }
 
 :root[data-glass-nav="true"] .bottom-nav-indicator {
-  background: rgba(var(--accent-rgb), 0.2);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  background: rgba(var(--accent-rgb), 0.24);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
 }
 
 :root[data-glass-nav="true"] .bottom-nav-item.active .bottom-nav-icon {
@@ -1003,17 +1014,22 @@ html[data-reduce-motion="true"] .page-transition {
 }
 
 :root[data-glass-nav="true"] .mobile-header.scrolled {
-  background: rgba(255, 255, 255, 0.085);
+  background: linear-gradient(180deg, rgba(12, 12, 18, 0.92), rgba(8, 8, 12, 0.84));
   border-bottom: 0;
   backdrop-filter: blur(26px) saturate(180%);
   -webkit-backdrop-filter: blur(26px) saturate(180%);
-  box-shadow: none;
+  box-shadow: 0 10px 30px -24px rgba(0, 0, 0, 0.95);
+}
+
+:root[data-glass-nav="true"] .mobile-subpage-title {
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 }
 
 :root[data-glass-nav="true"] .mobile-icon-btn,
 :root[data-glass-nav="true"] .mobile-back-btn {
-  background: rgba(255, 255, 255, 0.09);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(6, 6, 10, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 /* ---------- Theme picker ---------- */

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { NavExploreIcon, NavHomeIcon, NavSearchIcon, NavSettingsIcon, NavTvIcon } from './NavIcons';
+import { NavExploreIcon, NavHomeIcon, NavListIcon, NavSearchIcon, NavTvIcon } from './NavIcons';
 
 export function BottomNav() {
   return (
@@ -50,14 +50,14 @@ export function BottomNav() {
       </NavLink>
 
       <NavLink
-        to="/settings"
+        to="/wishlist"
         className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}
       >
         <div className="bottom-nav-icon-wrap">
           <div className="bottom-nav-indicator" />
-          <NavSettingsIcon size={23} className="bottom-nav-icon" />
+          <NavListIcon size={23} className="bottom-nav-icon" />
         </div>
-        <span className="bottom-nav-label">Settings</span>
+        <span className="bottom-nav-label">My List</span>
       </NavLink>
     </nav>
   );

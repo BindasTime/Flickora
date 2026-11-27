@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bookmark, Info, Play, Star } from 'lucide-react';
+import { Info, Play, Star } from 'lucide-react';
 import type { MediaSummary } from '../lib/types';
 import { posterUrl } from '../lib/tmdb';
 import { formatScore, yearOf } from '../lib/format';
-import { useApp } from '../state/AppState';
 
 interface MediaCardProps {
   media: MediaSummary;
@@ -22,9 +21,7 @@ function ratingClass(score: number) {
 
 export function MediaCard({ media, rank, className = '', showMeta = true }: MediaCardProps) {
   const navigate = useNavigate();
-  const { toggleWishlist, isWishlisted } = useApp();
   const [broken, setBroken] = useState(false);
-  const wished = isWishlisted(media.mediaType, media.id);
   const poster = posterUrl(media.posterPath, 'w500');
   const year = yearOf(media.releaseDate);
   const meta = [year, media.mediaType === 'tv' ? 'Series' : null].filter(Boolean).join(' · ');
@@ -75,18 +72,6 @@ export function MediaCard({ media, rank, className = '', showMeta = true }: Medi
             }}
           >
             <Play size={16} fill="currentColor" />
-          </button>
-          <button
-            type="button"
-            className={`icon-button${wished ? ' active' : ''}`}
-            aria-label={wished ? 'Remove from list' : 'Add to list'}
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              toggleWishlist(media);
-            }}
-          >
-            <Bookmark size={15} fill={wished ? 'currentColor' : 'none'} />
           </button>
           <button
             type="button"
