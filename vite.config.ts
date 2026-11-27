@@ -1,5 +1,6 @@
 import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
+import pkg from './package.json';
 
 /**
  * The production CSP is intentionally strict. During `vite` development React
@@ -20,7 +21,7 @@ function devCsp(): Plugin {
           )
           .replace(
             "connect-src 'self' https://api.themoviedb.org",
-            "connect-src 'self' https://api.themoviedb.org ws://localhost:5199 http://localhost:5199",
+            "connect-src 'self' https://api.themoviedb.org https://integrate.api.nvidia.com ws://localhost:5199 http://localhost:5199",
           );
       },
     },
@@ -30,6 +31,9 @@ function devCsp(): Plugin {
 export default defineConfig({
   plugins: [react(), devCsp()],
   base: './',
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version),
+  },
   server: { port: 5199, strictPort: true },
   build: {
     outDir: 'dist',

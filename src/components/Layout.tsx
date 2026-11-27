@@ -3,10 +3,33 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { MobileHeader } from './MobileHeader';
 import { BottomNav } from './BottomNav';
 import { Toasts } from './Toasts';
+import { AppIntro } from './AppIntro';
+import { useApp } from '../state/AppState';
+import { adsRunNatively, hideBannerAd, showBannerAd } from '../lib/ads';
+
+/** Docks the AdMob banner above the floating navigation while ads are on. */
+function NativeAdBanner() {
+  const { settings } = useApp();
+
+  useEffect(() => {
+    if (!adsRunNatively() || !settings.adsEnabled) {
+      void hideBannerAd();
+      return undefined;
+    }
+    void showBannerAd();
+    return () => {
+      void hideBannerAd();
+    };
+  }, [settings.adsEnabled]);
+
+  return null;
+}
 
 export function Layout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { settings } = useApp();
+  const nativeAds = adsRunNatively() && settings.adsEnabled;
   const scroller = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
@@ -35,15 +58,19 @@ export function Layout() {
   }, [location.pathname]);
 
   return (
-    <div className="mobile-app-shell">
+    <div className={`mobile-app-shell${nativeAds ? ' has-native-ads' : ''}`}>
       <main className="mobile-main-scroll" ref={scroller}>
         <div className="mobile-main-inner">
           <MobileHeader />
-          <Outlet />
+          <div className="page-transition" key={location.pathname}>
+            <Outlet />
+          </div>
         </div>
       </main>
       <BottomNav />
+      <NativeAdBanner />
       <Toasts />
+      <AppIntro />
     </div>
   );
 }

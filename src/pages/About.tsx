@@ -22,11 +22,11 @@ import { hf } from '../lib/bridge';
 import { useApp } from '../state/AppState';
 import { BrandMark, Wordmark } from '../components/Brand';
 
-const SOURCE_REPO = 'https://github.com/cinevra-app/cinevra';
-const PRIVACY_URL = 'https://github.com/cinevra-app/cinevra/blob/main/PRIVACY.md';
+const SOURCE_REPO = 'https://github.com/BindasTime/Flickora-Mobile';
+const PRIVACY_URL = 'https://github.com/BindasTime/Flickora-Mobile/blob/main/PRIVACY.md';
 const TMDB_URL = 'https://www.themoviedb.org/';
 const VIDRIFT_URL = 'https://vidrift.net/';
-const CONTACT = 'hello@cinevra.app';
+const CONTACT = 'https://github.com/BindasTime/Flickora-Mobile/issues';
 
 const FEATURES = [
   {
@@ -107,14 +107,14 @@ export function About() {
         <BrandMark size={68} />
         <div>
           <span className="eyebrow">
-            <Clapperboard size={13} /> Desktop edition
+            <Clapperboard size={13} /> Android edition
           </span>
           <h1>
             <Wordmark />
           </h1>
           <p>
-            A modern Linux desktop app for discovering movies and series. Browse by country and
-            genre, keep a local wishlist, save artwork, and watch in a fast, native-feeling player.
+            A fast Android app for discovering movies and series. Browse by country and genre,
+            keep a local watchlist, and pick up any episode exactly where you left off.
           </p>
           <div className="about-actions">
             <Link className="button primary" to="/">
@@ -123,8 +123,8 @@ export function About() {
             <button type="button" className="button glass" onClick={() => void hf.openExternal(SOURCE_REPO)}>
               <Github size={16} /> Project on GitHub
             </button>
-            <button type="button" className="button glass" onClick={() => void hf.openExternal(`mailto:${CONTACT}`)}>
-              <Mail size={16} /> Contact
+            <button type="button" className="button glass" onClick={() => void hf.openExternal(CONTACT)}>
+              <Mail size={16} /> Support
             </button>
           </div>
           <div className="about-stats">
@@ -248,10 +248,10 @@ export function About() {
               </span>
               <ArrowUpRight size={16} />
             </button>
-            <button type="button" className="credit-row" onClick={() => void hf.openExternal(`mailto:${CONTACT}`)}>
+            <button type="button" className="credit-row" onClick={() => void hf.openExternal(CONTACT)}>
               <span>
                 <strong>Contact</strong>
-                <small>{CONTACT}</small>
+                <small>Report a bug or ask a question</small>
               </span>
               <ArrowUpRight size={16} />
             </button>

@@ -1,5 +1,6 @@
 package com.haseebflix.mobile;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Build;
 import android.os.Message;
@@ -13,6 +14,7 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.window.OnBackInvokedCallback;
 import android.window.OnBackInvokedDispatcher;
+import androidx.core.splashscreen.SplashScreen;
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.BridgeWebChromeClient;
 
@@ -22,6 +24,7 @@ public class MainActivity extends BridgeActivity {
     private FrameLayout fullscreenContainer;
     private OnBackInvokedCallback backInvokedCallback;
     private boolean immersiveRequested = false;
+    private boolean playbackMode = false;
 
     private void applySystemBars(boolean hidden) {
         immersiveRequested = hidden;
@@ -55,17 +58,53 @@ public class MainActivity extends BridgeActivity {
         applySystemBars(enabled);
     }
 
+    /**
+     * Portrait everywhere except active playback. Re-asserted on resume and
+     * after a fullscreen video view closes, so a stale landscape lock cannot
+     * outlive the player.
+     */
+    private void applyOrientation() {
+        setRequestedOrientation(playbackMode
+                // Playback follows the sensor so the viewer can rotate to
+                // landscape, but the rest of the app stays portrait.
+                ? ActivityInfo.SCREEN_ORIENTATION_SENSOR
+                : ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
     public void setPlaybackModeEnabled(boolean enabled) {
-        setRequestedOrientation(enabled
-                ? android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-                : android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        playbackMode = enabled;
+        applyOrientation();
+    }
+
+    /**
+     * Detaches the HTML5 fullscreen overlay and restores normal chrome.
+     * Both the WebView-driven exit and the back-button path must go through
+     * here, otherwise the activity stays rotated to landscape with a stale
+     * overlay attached.
+     */
+    private void hideCustomView() {
+        if (customView == null) return;
+
+        ViewGroup decor = (ViewGroup) getWindow().getDecorView();
+        if (fullscreenContainer != null) {
+            decor.removeView(fullscreenContainer);
+            fullscreenContainer = null;
+        }
+
+        customView = null;
+        if (customViewCallback != null) {
+            customViewCallback.onCustomViewHidden();
+            customViewCallback = null;
+        }
+
+        applySystemBars(immersiveRequested);
+        applyOrientation();
     }
 
     private void dispatchAppBack() {
-        if (customView != null) {
-            if (customViewCallback != null) customViewCallback.onCustomViewHidden();
-            return;
-        }
+        // Leaving an HTML5 fullscreen video used to swallow the press entirely.
+        // Hide the custom view and still report the press to the app.
+        hideCustomView();
         WebView webView = getBridge() != null ? getBridge().getWebView() : null;
         if (webView != null) {
             webView.evaluateJavascript("window.dispatchEvent(new Event('hf:android-back'))", null);
@@ -80,6 +119,12 @@ public class MainActivity extends BridgeActivity {
             getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
                     OnBackInvokedDispatcher.PRIORITY_DEFAULT, backInvokedCallback);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!playbackMode) applyOrientation();
     }
 
     @Override
@@ -100,14 +145,21 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        // Keep the Android 12+ splash on screen until the WebView is ready,
+        // then hand over to the animated in-app intro.
+        SplashScreen.installSplashScreen(this);
+        // Capacitor builds its plugin registry inside super.onCreate(), so the
+        // plugin has to be registered first. Registering afterwards silently
+        // leaves JavaScript with "ImmersiveMode is not implemented on android".
+        registerPlugin(ImmersiveModePlugin.class);
+        registerPlugin(NvidiaAiPlugin.class);
         super.onCreate(savedInstanceState);
 
         // Keep screen on during video playback & dark navigation bar
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         // Keep normal browsing in portrait; Player switches this to landscape
         // through ImmersiveModePlugin while playback is active.
-        setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        registerPlugin(ImmersiveModePlugin.class);
+        applyOrientation();
 
         WebView webView = getBridge().getWebView();
         if (webView != null) {
@@ -148,7 +200,7 @@ public class MainActivity extends BridgeActivity {
 
                     // HTML5 video players request fullscreen through WebChromeClient.
                     // Keep the native activity in landscape and hide system bars.
-                    setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
                     fullscreenContainer = new FrameLayout(MainActivity.this);
                     fullscreenContainer.setBackgroundColor(0xFF000000);
@@ -166,21 +218,7 @@ public class MainActivity extends BridgeActivity {
 
                 @Override
                 public void onHideCustomView() {
-                    if (customView == null) return;
-
-                    ViewGroup decor = (ViewGroup) getWindow().getDecorView();
-                    if (fullscreenContainer != null) {
-                        decor.removeView(fullscreenContainer);
-                        fullscreenContainer = null;
-                    }
-
-                    customView = null;
-                    if (customViewCallback != null) {
-                        customViewCallback.onCustomViewHidden();
-                        customViewCallback = null;
-                    }
-
-                    applySystemBars(immersiveRequested);
+                    hideCustomView();
                 }
             });
         }

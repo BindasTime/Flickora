@@ -1,12 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Clock3, Search as SearchIcon, Trash2, TrendingUp, X } from 'lucide-react';
+import { Clock3, Search as SearchIcon, Sparkles, Trash2, TrendingUp, X } from 'lucide-react';
 import { MediaCard } from '../components/MediaCard';
+import { AdSlot } from '../components/AdSlot';
 import { GridSkeleton } from '../components/Skeletons';
 import { EmptyState, ErrorState } from '../components/States';
 import { useApp } from '../state/AppState';
 import { useAsync, useDebounced, useInfinite, useInfiniteScroll } from '../lib/hooks';
 import { fetchList, searchMedia } from '../lib/tmdb';
+import { findMoviesByDescription, isAiEnabled } from '../lib/ai';
 import type { MediaSummary } from '../lib/types';
 
 type Tab = 'multi' | 'movie' | 'tv';
@@ -15,6 +17,12 @@ const TABS: { value: Tab; label: string }[] = [
   { value: 'multi', label: 'All' },
   { value: 'movie', label: 'Movies' },
   { value: 'tv', label: 'TV Shows' },
+];
+
+const AI_EXAMPLES = [
+  { label: 'Neon detective', text: 'a detective in a rainy neon city who loses his memory' },
+  { label: 'Space survival', text: 'a crew fighting to survive on a derelict spaceship' },
+  { label: 'Feel-good classic', text: 'a feel-good underdog story about chasing a dream' },
 ];
 
 function interleave(a: MediaSummary[], b: MediaSummary[]): MediaSummary[] {
@@ -35,6 +43,10 @@ export function Search() {
   const [input, setInput] = useState(query);
   const [tab, setTab] = useState<Tab>('multi');
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [aiDescription, setAiDescription] = useState('');
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiResults, setAiResults] = useState<MediaSummary[] | null>(null);
+  const [aiNotice, setAiNotice] = useState('');
   const debouncedQuery = useDebounced(query.trim(), 420);
   const enabled = debouncedQuery.length >= 2;
 
@@ -67,6 +79,54 @@ export function Search() {
     }
     addRecentSearch(trimmed);
     navigate(`/search?q=${encodeURIComponent(trimmed)}`, { replace: true });
+  };
+
+  /** Resolve AI title suggestions against TMDB so only real titles are shown. */
+  const runAi = async () => {
+    const description = aiDescription.trim();
+    if (description.length < 8) {
+      setAiNotice('Describe a movie in at least a few words.');
+      return;
+    }
+    if (!isAiEnabled()) {
+      setAiNotice('AI movie finder is not configured on this device.');
+      return;
+    }
+
+    setAiBusy(true);
+    setAiNotice('');
+    setAiResults(null);
+    try {
+      const { titles, declined } = await findMoviesByDescription(description);
+      if (declined || !titles.length) {
+        setAiNotice('I only find movies. Describe the kind of film or show you want to watch.');
+        setAiResults([]);
+        return;
+      }
+
+      const resolved = await Promise.all(
+        titles.map(async (title) => {
+          try {
+            const found = await searchMedia('movie', title, 1);
+            return found.items[0] || null;
+          } catch {
+            return null;
+          }
+        }),
+      );
+      const unique = resolved.filter(
+        (item, position): item is MediaSummary =>
+          Boolean(item) && resolved.findIndex((other) => other?.id === item?.id) === position,
+      );
+      setAiResults(unique);
+      if (!unique.length) {
+        setAiNotice('No matches in our catalogue. Try describing a better-known movie.');
+      }
+    } catch (error) {
+      setAiNotice(error instanceof Error ? error.message : 'AI service is unavailable right now.');
+    } finally {
+      setAiBusy(false);
+    }
   };
 
   const hasQuery = query.trim().length > 0;
@@ -121,6 +181,79 @@ export function Search() {
           Search
         </button>
       </form>
+
+      <section className="search-block ai-find" aria-labelledby="ai-find-title">
+        <div className="ai-find-head">
+          <span className="ai-find-icon">
+            <Sparkles size={19} />
+          </span>
+          <div className="ai-find-copy">
+            <div className="ai-find-title-row">
+              <h2 id="ai-find-title">Find a movie with AI</h2>
+              <span className="ai-find-badge">Movies only</span>
+            </div>
+            <p>Describe a plot, a mood, or a scene. You get a real movie list — nothing else.</p>
+          </div>
+        </div>
+        <form
+          className="ai-find-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void runAi();
+          }}
+        >
+          <div className="ai-find-input-wrap">
+            <textarea
+              value={aiDescription}
+              onChange={(event) => setAiDescription(event.target.value)}
+              placeholder="e.g. a detective in a rainy neon city who loses his memory…"
+              aria-label="Describe the movie you want"
+              maxLength={500}
+              rows={2}
+            />
+            <span className="ai-find-count">{aiDescription.length}/500</span>
+          </div>
+          <div className="ai-find-actions">
+            <div className="ai-find-suggestions" aria-label="Example descriptions">
+              {AI_EXAMPLES.map((example) => (
+                <button
+                  key={example.label}
+                  type="button"
+                  className="ai-find-suggestion"
+                  onClick={() => setAiDescription(example.text)}
+                >
+                  {example.label}
+                </button>
+              ))}
+            </div>
+            <button type="submit" className="button primary" disabled={aiBusy}>
+              {aiBusy ? (
+                <>
+                  <span className="spinner" /> Finding…
+                </>
+              ) : (
+                <>
+                  <Sparkles size={16} /> Find movies
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+        {aiNotice && (
+          <p className="ai-find-notice" role="status">
+            {aiNotice}
+          </p>
+        )}
+        {aiResults && aiResults.length > 0 && (
+          <div className="media-grid compact ai-find-results">
+            {aiResults.map((media) => (
+              <MediaCard key={`${media.mediaType}-${media.id}`} media={media} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      <AdSlot placement="search" />
 
       {!hasQuery ? (
         <>

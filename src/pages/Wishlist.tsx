@@ -11,6 +11,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import { MediaCard } from '../components/MediaCard';
+import { AdSlot } from '../components/AdSlot';
 import { EmptyState } from '../components/States';
 import { useApp } from '../state/AppState';
 import { posterUrl } from '../lib/tmdb';
@@ -160,6 +161,8 @@ export function Wishlist() {
               </button>
             </div>
           </div>
+
+          <AdSlot placement="wishlist" />
 
           {items.length === 0 ? (
             <EmptyState

@@ -1,4 +1,18 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 apply plugin: 'com.android.application'
+
+// Release signing is optional so teammates can build without the private key.
+// Create android/keystore.properties (gitignored) with storeFile, storePassword,
+// keyAlias and keyPassword to produce a signed release APK/AAB.
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+def releaseKeystorePath = keystoreProperties.getProperty('storeFile')
+def releaseKeystore = releaseKeystorePath ? rootProject.file(releaseKeystorePath) : null
 
 android {
     namespace = "com.haseebflix.mobile"
@@ -7,13 +21,24 @@ android {
         applicationId "com.haseebflix.mobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.2.0"
+        versionCode 3
+        versionName "2.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
              // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    signingConfigs {
+        release {
+            if (releaseKeystore?.exists()) {
+                storeFile releaseKeystore
+                storePassword keystoreProperties.getProperty('storePassword')
+                keyAlias keystoreProperties.getProperty('keyAlias')
+                keyPassword keystoreProperties.getProperty('keyPassword')
+                v2SigningEnabled true
+            }
         }
     }
     buildTypes {
@@ -22,6 +47,9 @@ android {
             versionNameSuffix "-debug"
         }
         release {
+            if (releaseKeystore?.exists()) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

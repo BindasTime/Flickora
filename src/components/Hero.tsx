@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Bookmark, Play, Star } from 'lucide-react';
+import { Bookmark, ChevronLeft, ChevronRight, Play, Star } from 'lucide-react';
 import type { MediaSummary } from '../lib/types';
 import { backdropUrl } from '../lib/tmdb';
 import { formatScore, yearOf } from '../lib/format';
@@ -11,21 +11,27 @@ export function Hero({ items, loading }: { items: MediaSummary[]; loading?: bool
   const { settings, toggleWishlist, isWishlisted } = useApp();
   const slides = useMemo(() => items.filter((item) => item.backdropPath).slice(0, 5), [items]);
   const [index, setIndex] = useState(0);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     setIndex(0);
   }, [slides.length]);
 
+  const move = (direction: number) => {
+    if (slides.length < 2) return;
+    setIndex((current) => (current + direction + slides.length) % slides.length);
+  };
+
   useEffect(() => {
     if (settings.reduceMotion || slides.length < 2) {
       return undefined;
     }
-
-    const timer = window.setInterval(() => {
-      setIndex((current) => (current + 1) % slides.length);
-    }, 5000);
+    // Depending on `index` restarts the timer after a manual swipe so a slide
+    // never disappears a fraction of a second after the user selects it.
+    const timer = window.setInterval(() => move(1), 5000);
     return () => window.clearInterval(timer);
-  }, [settings.reduceMotion, slides.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.reduceMotion, slides.length, index]);
 
   if (loading) {
     return (
@@ -51,7 +57,25 @@ export function Hero({ items, loading }: { items: MediaSummary[]; loading?: bool
 
   return (
     <div className="hero-card-container">
-      <section className="hero">
+      <section
+        className="hero"
+        onTouchStart={(event) => {
+          const touch = event.touches[0];
+          touchStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+        }}
+        onTouchEnd={(event) => {
+          const start = touchStart.current;
+          touchStart.current = null;
+          if (!start) return;
+          const touch = event.changedTouches[0];
+          if (!touch) return;
+          const dx = touch.clientX - start.x;
+          const dy = touch.clientY - start.y;
+          if (Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+            move(dx < 0 ? 1 : -1);
+          }
+        }}
+      >
         <div className="hero-backdrops" aria-hidden="true">
           {slides.map((slide, slideIndex) => (
             <div
@@ -64,6 +88,27 @@ export function Hero({ items, loading }: { items: MediaSummary[]; loading?: bool
           ))}
         </div>
         <div className="hero-vignette" />
+
+        {slides.length > 1 && (
+          <>
+            <button
+              type="button"
+              className="hero-nav-arrow prev"
+              onClick={() => move(-1)}
+              aria-label="Previous featured title"
+            >
+              <ChevronLeft size={19} />
+            </button>
+            <button
+              type="button"
+              className="hero-nav-arrow next"
+              onClick={() => move(1)}
+              aria-label="Next featured title"
+            >
+              <ChevronRight size={19} />
+            </button>
+          </>
+        )}
 
         <div className="hero-content" key={media.id}>
           <div className="hero-eyebrow">

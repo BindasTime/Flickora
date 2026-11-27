@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Search, WifiOff } from 'lucide-react';
 import { useApp } from '../state/AppState';
-import { BrandMark, Wordmark } from './Brand';
+import { BrandMark } from './Brand';
 import { WindowButtons } from './WindowButtons';
 
 export function TitleBar() {
@@ -47,8 +47,7 @@ export function TitleBar() {
   return (
     <header className="titlebar">
       <div className="titlebar-brand">
-        <BrandMark size={24} />
-        <Wordmark compact />
+        <BrandMark size={40} />
       </div>
 
       <div className="titlebar-search">

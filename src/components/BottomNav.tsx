@@ -1,10 +1,7 @@
 import { NavLink } from 'react-router-dom';
-import { Bookmark, Compass, Home, Search, Tv } from 'lucide-react';
-import { useApp } from '../state/AppState';
+import { NavExploreIcon, NavHomeIcon, NavSearchIcon, NavSettingsIcon, NavTvIcon } from './NavIcons';
 
 export function BottomNav() {
-  const { wishlist } = useApp();
-
   return (
     <nav className="mobile-bottom-nav" aria-label="Mobile Navigation">
       <NavLink
@@ -14,7 +11,7 @@ export function BottomNav() {
       >
         <div className="bottom-nav-icon-wrap">
           <div className="bottom-nav-indicator" />
-          <Home size={22} strokeWidth={2.2} className="bottom-nav-icon" />
+          <NavHomeIcon size={23} className="bottom-nav-icon" />
         </div>
         <span className="bottom-nav-label">Home</span>
       </NavLink>
@@ -25,7 +22,7 @@ export function BottomNav() {
       >
         <div className="bottom-nav-icon-wrap">
           <div className="bottom-nav-indicator" />
-          <Compass size={22} strokeWidth={2.2} className="bottom-nav-icon" />
+          <NavExploreIcon size={23} className="bottom-nav-icon" />
         </div>
         <span className="bottom-nav-label">Explore</span>
       </NavLink>
@@ -36,7 +33,7 @@ export function BottomNav() {
       >
         <div className="bottom-nav-icon-wrap">
           <div className="bottom-nav-indicator" />
-          <Tv size={22} strokeWidth={2.2} className="bottom-nav-icon" />
+          <NavTvIcon size={23} className="bottom-nav-icon" />
         </div>
         <span className="bottom-nav-label">TV Series</span>
       </NavLink>
@@ -47,23 +44,20 @@ export function BottomNav() {
       >
         <div className="bottom-nav-icon-wrap">
           <div className="bottom-nav-indicator" />
-          <Search size={22} strokeWidth={2.2} className="bottom-nav-icon" />
+          <NavSearchIcon size={23} className="bottom-nav-icon" />
         </div>
         <span className="bottom-nav-label">Search</span>
       </NavLink>
 
       <NavLink
-        to="/wishlist"
+        to="/settings"
         className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}
       >
         <div className="bottom-nav-icon-wrap">
           <div className="bottom-nav-indicator" />
-          <Bookmark size={22} strokeWidth={2.2} className="bottom-nav-icon" />
-          {wishlist.length > 0 && (
-            <span className="bottom-nav-badge">{wishlist.length > 99 ? '99+' : wishlist.length}</span>
-          )}
+          <NavSettingsIcon size={23} className="bottom-nav-icon" />
         </div>
-        <span className="bottom-nav-label">My List</span>
+        <span className="bottom-nav-label">Settings</span>
       </NavLink>
     </nav>
   );

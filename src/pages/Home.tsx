@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Hero } from '../components/Hero';
 import { MediaRow } from '../components/MediaRow';
 import { ContinueCard } from '../components/ContinueCard';
+import { AdSlot } from '../components/AdSlot';
 import { useApp } from '../state/AppState';
 import { useAsync } from '../lib/hooks';
 import { fetchLatestMovies, fetchList, fetchTopMoviesToday } from '../lib/tmdb';
@@ -119,6 +120,9 @@ export function Home() {
         )}
 
         <TopMoviesTodayRow />
+
+        <AdSlot placement="home" />
+
         <ListRow
           type="movie"
           kind="trending"

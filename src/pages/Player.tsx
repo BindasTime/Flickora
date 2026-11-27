@@ -5,16 +5,20 @@ import {
   ArrowLeft,
   Check,
   Clapperboard,
+  Expand,
   ExternalLink,
   ListVideo,
   Maximize2,
   Minimize2,
   Play,
+  RectangleHorizontal,
   RefreshCw,
   X,
 } from 'lucide-react';
 import { hf } from '../lib/bridge';
 import { setImmersiveMode, setPlaybackOrientation } from '../lib/bridge';
+import { adsRunNatively, notePlaybackAd, playbackAdAllowed, showInterstitialAd } from '../lib/ads';
+import { AdPreroll } from '../components/AdPreroll';
 import { useApp } from '../state/AppState';
 import { useAsync } from '../lib/hooks';
 import { buildEmbedUrl, fetchDetails, fetchSeason, stillUrl } from '../lib/tmdb';
@@ -36,6 +40,18 @@ interface Playback {
 const ORIGIN_RE = /^https:\/\/([a-z0-9-]+\.)*vidrift\.(net|in)$/i;
 // Below this, a position is treated as "just started" rather than resumable.
 const RESUME_MIN_SECONDS = 8;
+
+/** Fit = whole frame visible (letterbox), Fill = crop to cover the screen. */
+type FitMode = 'fit' | 'fill';
+const FIT_MODE_KEY = 'flickora.playerFit';
+
+function loadFitMode(): FitMode {
+  try {
+    return localStorage.getItem(FIT_MODE_KEY) === 'fill' ? 'fill' : 'fit';
+  } catch {
+    return 'fit';
+  }
+}
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -92,6 +108,9 @@ export function Player() {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [provider, setProvider] = useState<string | null>(null);
   const [showControls, setShowControls] = useState(true);
+  const [prerollOpen, setPrerollOpen] = useState(false);
+  const [fitMode, setFitMode] = useState<FitMode>(loadFitMode);
+  const adRequestedRef = useRef(false);
   const hideControlsTimer = useRef<number | null>(null);
 
   const resetControlsTimer = useCallback(() => {
@@ -108,6 +127,22 @@ export function Player() {
       if (hideControlsTimer.current) window.clearTimeout(hideControlsTimer.current);
     };
   }, [resetControlsTimer]);
+
+  // One pre-roll per session entry, rate-limited by the ad module. The native
+  // build shows an AdMob interstitial; browsers get the in-app overlay.
+  useEffect(() => {
+    if (!ready || adRequestedRef.current) return;
+    adRequestedRef.current = true;
+    if (!playbackAdAllowed(settings.adsEnabled)) return;
+    if (adsRunNatively()) {
+      void showInterstitialAd().then((shown) => {
+        if (shown) notePlaybackAd();
+      });
+    } else {
+      setPrerollOpen(true);
+      notePlaybackAd();
+    }
+  }, [ready, settings.adsEnabled]);
 
   const { data: details } = useAsync(() => fetchDetails(mediaType, id), [mediaType, id]);
   const activeSeason = useAsync<SeasonDetails | null>(
@@ -297,8 +332,24 @@ export function Player() {
     navigate(`/title/${mediaType}/${id}`);
   }, [mediaType, id, navigate]);
 
+  const toggleFitMode = useCallback(() => {
+    setFitMode((current) => {
+      const next: FitMode = current === 'fit' ? 'fill' : 'fit';
+      try {
+        localStorage.setItem(FIT_MODE_KEY, next);
+      } catch {}
+      toast(next === 'fill' ? 'Fill screen' : 'Fit to screen', 'info');
+      return next;
+    });
+  }, [toast]);
+
   const goBack = useCallback(() => {
-    if (pendingExitRef.current) return;
+    // A pending exit waits on the player for its exact playhead. If the viewer
+    // presses back again, leave immediately rather than swallowing the press.
+    if (pendingExitRef.current) {
+      finishExit();
+      return;
+    }
     // Save what we have, then ask the player for its exact playhead so an
     // escape right between its 5-second progress ticks is not rounded away.
     saveNow();
@@ -311,6 +362,7 @@ export function Player() {
         // The frame is already gone; fall through to the timeout below.
       }
       window.setTimeout(finishExit, 400);
+      // The frame is cross-origin: if it never answers, still leave.
       return;
     }
     navigate(`/title/${mediaType}/${id}`);
@@ -639,6 +691,7 @@ export function Player() {
             : undefined,
         }}
       />
+      {prerollOpen && <AdPreroll onClose={() => setPrerollOpen(false)} />}
       <header className={`player-topbar ${showControls ? 'controls-visible' : 'controls-hidden'}`}>
         <div className="player-title">
           <button type="button" className="icon-button no-drag" aria-label="Back" onClick={goBack}>
@@ -689,6 +742,15 @@ export function Player() {
           <button
             type="button"
             className="icon-button"
+            aria-label={fitMode === 'fill' ? 'Fit to screen' : 'Fill screen'}
+            title={fitMode === 'fill' ? 'Fit to screen' : 'Fill screen'}
+            onClick={toggleFitMode}
+          >
+            {fitMode === 'fill' ? <RectangleHorizontal size={16} /> : <Expand size={16} />}
+          </button>
+          <button
+            type="button"
+            className="icon-button"
             aria-label={isFullscreen ? 'Exit full screen' : 'Full screen'}
             onClick={() => void toggleFullscreen()}
           >
@@ -697,7 +759,42 @@ export function Player() {
         </div>
       </header>
 
-      <div className="player-stage">
+      {/* The embedded player swallows taps, so once the top bar auto-hides the
+          only ways out are hardware back or the always-visible exit button. */}
+      {!showControls && (
+        <>
+          <button
+            type="button"
+            className="player-reveal"
+            aria-label="Show player controls"
+            onClick={resetControlsTimer}
+          />
+          <button
+            type="button"
+            className="player-float left"
+            aria-label="Exit player"
+            title="Exit player"
+            onTouchStart={(event) => event.stopPropagation()}
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={goBack}
+          >
+            <ArrowLeft size={19} />
+          </button>
+          <button
+            type="button"
+            className="player-float right"
+            aria-label={fitMode === 'fill' ? 'Fit to screen' : 'Fill screen'}
+            title={fitMode === 'fill' ? 'Fit to screen' : 'Fill screen'}
+            onTouchStart={(event) => event.stopPropagation()}
+            onMouseDown={(event) => event.stopPropagation()}
+            onClick={toggleFitMode}
+          >
+            {fitMode === 'fill' ? <RectangleHorizontal size={18} /> : <Expand size={18} />}
+          </button>
+        </>
+      )}
+
+      <div className={fitMode === 'fill' ? 'player-stage fill' : 'player-stage'}>
         {frameLoading && (
           <div className="player-loading">
             <span className="spinner" />

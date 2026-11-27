@@ -1,5 +1,6 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { Component, useEffect, type ErrorInfo, type ReactNode } from 'react';
+import { HashRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { setPlaybackOrientation } from './lib/bridge';
 import { AppProvider } from './state/AppState';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
@@ -51,11 +52,25 @@ class AppErrorBoundary extends Component<{ children: ReactNode }, { error: Error
   }
 }
 
+/**
+ * The player asks the native activity for landscape. Restoring portrait only in
+ * the player's unmount cleanup is fragile (fast back press, error boundary, an
+ * exiting frame), so any non-player route re-asserts portrait.
+ */
+function OrientationGuard() {
+  const location = useLocation();
+  useEffect(() => {
+    if (!location.pathname.startsWith('/watch/')) void setPlaybackOrientation(false);
+  }, [location.pathname]);
+  return null;
+}
+
 export function App() {
   return (
     <AppErrorBoundary>
       <AppProvider>
         <HashRouter>
+          <OrientationGuard />
           <Routes>
             <Route element={<Layout />}>
               <Route index element={<Home />} />

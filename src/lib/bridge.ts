@@ -39,6 +39,8 @@ interface ImmersiveModePlugin {
 }
 
 const immersiveModePlugin = registerPlugin<ImmersiveModePlugin>('ImmersiveMode');
+/** The plugin only exists in the legacy desktop shell, not in Capacitor. */
+const hasImmersiveMode = Capacitor.isPluginAvailable('ImmersiveMode');
 
 interface HfBridge {
   tmdb: <T>(path: string, query?: Record<string, string | number | boolean>) => Promise<TmdbResponse<T>>;
@@ -87,7 +89,7 @@ export const hasBridge = typeof window !== 'undefined' && Boolean(window.hf);
 
 /** Hides Android system bars for landscape playback when running in Capacitor. */
 export async function setImmersiveMode(enabled: boolean): Promise<void> {
-  if (!Capacitor.isNativePlatform()) return;
+  if (!Capacitor.isNativePlatform() || !hasImmersiveMode) return;
   try {
     await immersiveModePlugin.setEnabled({ enabled });
   } catch (error) {
@@ -97,7 +99,7 @@ export async function setImmersiveMode(enabled: boolean): Promise<void> {
 
 /** Locks the native app to portrait except while the movie player is open. */
 export async function setPlaybackOrientation(enabled: boolean): Promise<void> {
-  if (!Capacitor.isNativePlatform()) return;
+  if (!Capacitor.isNativePlatform() || !hasImmersiveMode) return;
   try {
     await immersiveModePlugin.setPlaybackMode({ enabled });
   } catch (error) {
@@ -113,10 +115,13 @@ const initialFallbackState: AppState = {
     apiKey: '',
     language: 'en-US',
     region: 'US',
+    theme: 'coral',
+    glassNav: true,
     reduceMotion: false,
     blockPopups: true,
     autoplayNext: true,
     playerBranding: true,
+    adsEnabled: true,
   },
   wishlist: [],
   progress: [],
@@ -255,11 +260,12 @@ const fallbackBridge: HfBridge = {
     },
   },
   async appInfo() {
+    const native = Capacitor.isNativePlatform();
     return {
-      version: '1.0.0',
-      electron: 'browser preview',
+      version: typeof __APP_VERSION__ === 'string' ? __APP_VERSION__ : '1.2.0',
+      electron: native ? 'Capacitor' : 'browser preview',
       chrome: navigator.userAgent,
-      platform: 'web',
+      platform: native ? Capacitor.getPlatform() : 'web',
       userData: '',
     };
   },

@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from 'react';
 import { hf } from '../lib/bridge';
+import { themeMetaColor } from '../config/themes';
 import { clearClientCache } from '../lib/tmdb';
 import type {
   AppState,
@@ -56,10 +57,13 @@ export const defaultSettings: Settings = {
   apiKey: '',
   language: 'en-US',
   region: 'US',
+  theme: 'coral',
+  glassNav: true,
   reduceMotion: false,
   blockPopups: true,
   autoplayNext: true,
   playerBranding: true,
+  adsEnabled: true,
 };
 
 export const emptyState: AppState = {
@@ -94,6 +98,17 @@ function normalizeLoaded(loaded: AppState | null | undefined): AppState {
   };
 }
 
+/** Mirror persisted preferences onto <html> so CSS can react without a reload. */
+function applyChrome(settings: Settings) {
+  const root = document.documentElement;
+  root.dataset.reduceMotion = String(settings.reduceMotion);
+  root.dataset.theme = settings.theme;
+  root.dataset.glassNav = String(settings.glassNav);
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute('content', themeMetaColor(settings.theme));
+}
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>(emptyState);
   const [ready, setReady] = useState(false);
@@ -116,7 +131,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const merged = normalizeLoaded(loaded);
       setState(merged);
       setReady(true);
-      document.documentElement.dataset.reduceMotion = String(merged.settings.reduceMotion);
+      applyChrome(merged.settings);
     });
     return () => {
       cancelled = true;
@@ -147,7 +162,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const current = stateRef.current;
     const settings = { ...current.settings, ...patch };
     commit({ ...current, settings });
-    document.documentElement.dataset.reduceMotion = String(settings.reduceMotion);
+    applyChrome(settings);
     if ('language' in patch || 'region' in patch || 'apiKey' in patch) {
       clearClientCache();
     }
@@ -259,7 +274,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const fresh = normalizeLoaded(await hf.state.reset());
     commit(fresh);
     clearClientCache();
-    document.documentElement.dataset.reduceMotion = String(fresh.settings.reduceMotion);
+    applyChrome(fresh.settings);
     toast('App data reset', 'success');
   }, [commit, toast]);
 

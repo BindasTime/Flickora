@@ -42,6 +42,7 @@ import {
 } from '../lib/format';
 import type { MediaDetails, MediaType, SeasonDetails } from '../lib/types';
 import { MediaRow } from '../components/MediaRow';
+import { AdSlot } from '../components/AdSlot';
 import { ErrorState, InlineLoader } from '../components/States';
 
 type Tab = 'episodes' | 'more' | 'details';
@@ -582,6 +583,8 @@ export function Details() {
                 </div>
               </dl>
             </section>
+
+            <AdSlot placement="details" variant="wide" />
 
             {details.cast.length > 0 && (
               <section className="details-section">

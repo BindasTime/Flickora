@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, Settings, User, WifiOff } from 'lucide-react';
+import { ArrowLeft, Search, Settings, WifiOff } from 'lucide-react';
 import { HeaderMark } from './Brand';
 import { useApp } from '../state/AppState';
 
@@ -53,10 +53,14 @@ export function MobileHeader() {
             </span>
           </div>
         ) : (
-          <div className="mobile-brand-wrap" onClick={() => navigate('/')}>
-            <HeaderMark size={28} />
-            <span className="brand-title">Flickora</span>
-          </div>
+          <button
+            type="button"
+            className="mobile-brand-wrap"
+            onClick={() => navigate('/')}
+            aria-label="Flickora home"
+          >
+            <HeaderMark size={44} />
+          </button>
         )}
       </div>
 
@@ -80,10 +84,10 @@ export function MobileHeader() {
               type="button"
               className="mobile-avatar-btn"
               onClick={() => navigate('/settings')}
-              aria-label="Profile"
+              aria-label="Settings"
             >
               <div className="mobile-avatar-inner">
-                <User size={17} />
+                <Settings size={19} />
               </div>
             </button>
           </>

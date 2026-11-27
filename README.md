@@ -61,7 +61,7 @@ No account. No tracking. Everything stays on your device.
 
 Download the latest APK directly from [GitHub Releases](https://github.com/BindasTime/Flickora-Mobile/releases/latest):
 
-1. Download `Flickora-v1.2.0.apk`
+1. Download `Flickora-v2.0.0.apk`
 2. On your Android device go to **Settings → Install unknown apps** and allow your browser
 3. Open the downloaded file and tap **Install**
 
@@ -76,8 +76,8 @@ Download the latest APK directly from [GitHub Releases](https://github.com/Binda
 | Tool | Version |
 |---|---|
 | Node.js | ≥ 18 |
-| Java JDK | 17 (required by Gradle) |
-| Android SDK | API 35 (compileSdk) |
+| Java JDK | 21 (AGP 8 requires JDK 17+; this repo uses 21) |
+| Android SDK | API 36 (compileSdk / targetSdk) |
 | Android Studio | Hedgehog or later (optional, for SDK tools) |
 
 ### Setup
@@ -101,11 +101,12 @@ npx cap sync android
 # Debug build (sideload-ready)
 npm run build:apk
 
-# Release build (unsigned — sign before distributing)
-npm run build:apk:release
+# Signed release APK + AAB (needs android/keystore.properties — see docs/RELEASE.md)
+npm run build:release
 ```
 
-The compiled APK will be output to `release/Flickora-v1.2.0.apk`.
+Signed artifacts land in `release/Flickora-v2.0.0.apk` and
+`release/Flickora-v2.0.0.aab`.
 
 ### Development Server
 
@@ -155,6 +156,45 @@ metadata, posters, and backdrops. Playback is provided by the
 [VidRift](https://vidrift.net/) embed player loaded inside a sandboxed WebView.
 
 > This app does not host, store, or distribute video. It is a personal-use client only.
+
+---
+
+## 💰 Monetization (ads)
+
+Flickora ships with an AdMob banner, a rate-limited pre-roll interstitial and a
+house sponsored card for browser builds. The code is done; you only supply the
+IDs from your own AdMob account:
+
+1. Create an app in [AdMob](https://admob.google.com) (Android → *Flickora*) and
+   two ad units — one **Banner**, one **Interstitial**.
+2. Run the setup helper once:
+
+   ```bash
+   npm run admob:setup
+   ```
+
+   It writes the IDs into `.env`, patches
+   `android/app/src/main/AndroidManifest.xml` and generates
+   `public/app-ads.txt`.
+3. Confirm everything is live, then rebuild:
+
+   ```bash
+   npm run admob:check
+   npm run build:release
+   ```
+
+Until real IDs are set the app requests Google's demo ads, which are safe to
+test with and never generate revenue. Pre-rolls are capped to one every
+3 minutes (`interstitialGapMs`), readers can switch ads off in
+**Settings → Ads & support**, and GDPR/CCPA consent is handled by Google's UMP
+SDK (re-openable from **Settings → Ad privacy choices**).
+
+Full walkthrough — account creation, app-ads.txt verification, consent
+messages, policy and troubleshooting: [`docs/ADMOB.md`](docs/ADMOB.md).
+
+> AdMob policies require that you own or are licensed to distribute the content
+> next to your ads. Monetising unauthorised streams will get the account
+> suspended, so only run this with content you have the rights to.
 
 ---
 

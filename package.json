@@ -1,7 +1,7 @@
 {
   "name": "haseebflix-mobile",
   "productName": "Flickora",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Flickora mobile app for movies and TV series",
   "private": true,
   "type": "module",
@@ -9,11 +9,16 @@
     "dev": "vite --port 5173 --host",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
+    "freebuff:smoke": "node scripts/freebuff-chat.mjs",
+    "admob:setup": "node scripts/admob-setup.mjs",
+    "admob:check": "node scripts/admob-setup.mjs --check",
     "cap:sync": "npx cap sync android",
-    "build:apk": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug && cp app/build/outputs/apk/debug/app-debug.apk ../release/Flickora-v1.2.0.apk",
-    "build:apk:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease && cp app/build/outputs/apk/release/app-release-unsigned.apk ../release/Flickora-v1.2.0-release.apk"
+    "build:apk": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug && cd .. && mkdir -p release && cp android/app/build/outputs/apk/debug/app-debug.apk release/Flickora-v2.0.0-debug.apk",
+    "build:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease bundleRelease && cd .. && mkdir -p release && cp android/app/build/outputs/apk/release/app-release.apk release/Flickora-v2.0.0.apk && cp android/app/build/outputs/bundle/release/app-release.aab release/Flickora-v2.0.0.aab",
+    "build:apk:release": "npm run build:release"
   },
   "dependencies": {
+    "@capacitor-community/admob": "^8.5.0",
     "@capacitor/core": "^8.6.0",
     "lucide-react": "^0.468.0",
     "react": "^19.0.0",
@@ -26,6 +31,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "openai": "^7.65.0",
     "typescript": "^5.7.2",
     "vite": "^6.0.0"
   }

@@ -444,6 +444,7 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
   height: 40px;
   padding: 0 12px;
   border: 1px solid var(--md-outline);
@@ -454,8 +455,13 @@ button:disabled {
 }
 
 .select-field select {
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   appearance: none;
   -webkit-appearance: none;
   border: 0;
@@ -1283,7 +1289,9 @@ button:disabled {
 
 .browse-filters {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* 1fr alone uses min-content sizing, and a <select> with 250 country names
+     has a huge intrinsic width. minmax(0, 1fr) lets the grid tracks shrink. */
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 10px;
 }
 
@@ -3066,6 +3074,7 @@ button:disabled {
 .player-stage {
   position: absolute;
   inset: 0;
+  overflow: hidden;
 }
 
 .player-frame {
@@ -3073,6 +3082,54 @@ button:disabled {
   height: 100%;
   border: 0;
   background: #000;
+}
+
+/* Fill crops the 16:9 player to cover the screen instead of letterboxing it. */
+.player-stage.fill .player-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 177.78vh);
+  height: max(100%, 56.25vw);
+  transform: translate(-50%, -50%);
+}
+
+/* Tap strip above the embedded player: restores the auto-hidden top bar. */
+.player-reveal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: calc(var(--safe-top) + 76px);
+  z-index: 24;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+/* Always-reachable controls while the top bar is hidden. */
+.player-float {
+  position: absolute;
+  top: calc(var(--safe-top) + 10px);
+  z-index: 32;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+
+.player-float.left {
+  left: calc(var(--safe-left) + 10px);
+}
+
+.player-float.right {
+  right: calc(var(--safe-right) + 10px);
 }
 
 .player-topbar {
@@ -3442,6 +3499,8 @@ button:disabled {
 
 .brand-mark {
   display: block;
+  object-fit: contain;
+  flex: none;
 }
 
 .wordmark {

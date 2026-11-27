@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Film, Globe2, Languages, LayoutGrid, RefreshCw, Shuffle, Tv } from 'lucide-react';
 import { MediaCard } from '../components/MediaCard';
+import { AdSlot } from '../components/AdSlot';
 import { GridSkeleton } from '../components/Skeletons';
 import { EmptyState, ErrorState } from '../components/States';
 import { hf } from '../lib/bridge';
@@ -235,6 +236,8 @@ export function Browse({ type }: { type: MediaType }) {
           </label>
         </div>
       </div>
+
+      <AdSlot placement="browse" />
 
       {isAudioScan && !audioUnavailable && !southHindiUnverified && (
         <div className="audio-scan-note">

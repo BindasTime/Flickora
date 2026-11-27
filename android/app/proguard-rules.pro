@@ -12,6 +12,15 @@
 #   public *;
 #}
 
+# Capacitor discovers plugin methods reflectively. Keep the annotations and
+# annotated methods so R8 cannot rename/remove the native bridges.
+-keep @interface com.getcapacitor.annotation.CapacitorPlugin
+-keep @interface com.getcapacitor.annotation.PluginMethod
+-keep @com.getcapacitor.annotation.CapacitorPlugin class * { *; }
+-keepclasseswithmembers class * {
+    @com.getcapacitor.annotation.PluginMethod <methods>;
+}
+
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
 #-keepattributes SourceFile,LineNumberTable

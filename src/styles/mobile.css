@@ -285,6 +285,12 @@
     -webkit-line-clamp: 3;
     overflow: hidden;
   }
+
+  /* Full-width selects on phones so long country names never push the
+     filter row past the viewport. */
+  .browse-filters {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ==========================================================================

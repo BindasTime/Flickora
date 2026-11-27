@@ -6,8 +6,11 @@ import {
   Eye,
   EyeOff,
   Globe2,
+  Heart,
   Info,
   KeyRound,
+  Megaphone,
+  Palette,
   PlayCircle,
   RotateCcw,
   Save,
@@ -21,12 +24,15 @@ import { useAsync } from '../lib/hooks';
 import { LANGUAGES, REGIONS } from '../lib/tmdb';
 import { formatBytes } from '../lib/format';
 import { InlineLoader } from '../components/States';
+import { AD_CONFIG } from '../config/ads';
+import { THEMES } from '../config/themes';
+import { adsRunNatively, showAdPrivacyOptions } from '../lib/ads';
 
-const SOURCE_REPO = 'https://github.com/cinevra-app/cinevra';
-const PRIVACY_URL = 'https://github.com/cinevra-app/cinevra/blob/main/PRIVACY.md';
+const SOURCE_REPO = 'https://github.com/BindasTime/Flickora-Mobile';
+const PRIVACY_URL = 'https://github.com/BindasTime/Flickora-Mobile/blob/main/PRIVACY.md';
 const TMDB_URL = 'https://www.themoviedb.org/';
 const VIDRIFT_URL = 'https://vidrift.net/';
-const CONTACT = 'hello@cinevra.app';
+const CONTACT = 'https://github.com/BindasTime/Flickora-Mobile/issues';
 
 function Toggle({
   checked,
@@ -301,7 +307,7 @@ export function Settings() {
         <section className="settings-card">
           <div className="settings-card-head">
             <span className="settings-icon">
-              <Sparkles size={17} />
+              <Palette size={17} />
             </span>
             <div>
               <h2>Appearance</h2>
@@ -314,6 +320,92 @@ export function Settings() {
             checked={settings.reduceMotion}
             onChange={(value) => void updateSettings({ reduceMotion: value })}
           />
+
+          <div className="field">
+            <span>Theme color</span>
+            <div className="theme-swatches" role="radiogroup" aria-label="Theme color">
+              {THEMES.map((theme) => (
+                <button
+                  key={theme.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={settings.theme === theme.id}
+                  className={`theme-swatch${settings.theme === theme.id ? ' selected' : ''}`}
+                  onClick={() => void updateSettings({ theme: theme.id })}
+                >
+                  <span
+                    className="theme-swatch-dot"
+                    style={{ background: theme.color, color: theme.color }}
+                  />
+                  {theme.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <Toggle
+            label="Liquid glass navigation"
+            help="Frosted, translucent top bar and bottom dock. On by default; turn off for classic chrome."
+            checked={settings.glassNav}
+            onChange={(value) => void updateSettings({ glassNav: value })}
+          />
+        </section>
+
+        <section className="settings-card">
+          <div className="settings-card-head">
+            <span className="settings-icon">
+              <Megaphone size={17} />
+            </span>
+            <div>
+              <h2>Ads &amp; support</h2>
+              <p>
+                Short, tasteful ads keep Flickora free. Pre-roll ads before playback can be skipped
+                after a few seconds.
+              </p>
+            </div>
+            <span className={`pill ${settings.adsEnabled ? 'accent' : ''}`}>
+              {settings.adsEnabled ? 'Ads on' : 'Ad-free'}
+            </span>
+          </div>
+
+          <Toggle
+            label="Show ads"
+            help="Turn off for an ad-free experience on this device."
+            checked={settings.adsEnabled}
+            onChange={(value) => void updateSettings({ adsEnabled: value })}
+          />
+
+          <div className="settings-actions">
+            <button
+              type="button"
+              className="button glass"
+              onClick={() => void hf.openExternal(AD_CONFIG.house.url)}
+            >
+              <Heart size={15} /> Support Flickora
+            </button>
+            {adsRunNatively() && (
+              <button
+                type="button"
+                className="button glass"
+                onClick={() => {
+                  void showAdPrivacyOptions().then((opened) => {
+                    toast(
+                      opened
+                        ? 'Ad privacy choices opened'
+                        : 'Ad privacy choices are not available right now',
+                      opened ? 'success' : 'info',
+                    );
+                  });
+                }}
+              >
+                <ShieldCheck size={15} /> Ad privacy choices
+              </button>
+            )}
+          </div>
+          <p className="settings-help">
+            Banners come from Google AdMob; pre-rolls are capped so they never interrupt back-to-back
+            episodes. Supporting the project is the nicest way to say thanks.
+          </p>
         </section>
 
         <section className="settings-card">
@@ -421,11 +513,11 @@ export function Settings() {
           </div>
 
           <div className="contact-row">
-            <span>{CONTACT}</span>
+            <span>Support &amp; contact · GitHub Issues</span>
             <button
               type="button"
               className="icon-button"
-              aria-label="Copy contact email"
+              aria-label="Copy support link"
               onClick={() => void copy(CONTACT, 'contact')}
             >
               {copied === 'contact' ? <Check size={15} /> : <Copy size={15} />}

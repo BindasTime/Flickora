@@ -149,14 +149,21 @@ export interface ProgressItem {
   updatedAt: number;
 }
 
+export type ThemeId = 'coral' | 'ocean' | 'violet' | 'emerald' | 'amber';
+
 export interface Settings {
   apiKey: string;
   language: string;
   region: string;
+  theme: ThemeId;
+  /** Translucent, high-blur "liquid glass" navigation chrome. */
+  glassNav: boolean;
   reduceMotion: boolean;
   blockPopups: boolean;
   autoplayNext: boolean;
   playerBranding: boolean;
+  /** Show sponsor banners and pre-roll ads. */
+  adsEnabled: boolean;
 }
 
 export interface AppState {
