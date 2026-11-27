@@ -45,6 +45,12 @@ export function MobileHeader() {
     setHidden(false);
   }, [location.pathname]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle('topbar-hidden', hidden);
+    return () => root.classList.remove('topbar-hidden');
+  }, [hidden]);
+
   return (
     <header
       className={`mobile-header${scrolled ? ' scrolled' : ''}${hidden ? ' is-hidden' : ''}`}
