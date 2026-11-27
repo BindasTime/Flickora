@@ -1,7 +1,7 @@
 {
   "name": "haseebflix-mobile",
   "productName": "Flickora",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Flickora mobile app for movies and TV series",
   "private": true,
   "type": "module",
@@ -13,8 +13,8 @@
     "admob:setup": "node scripts/admob-setup.mjs",
     "admob:check": "node scripts/admob-setup.mjs --check",
     "cap:sync": "npx cap sync android",
-    "build:apk": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug && cd .. && mkdir -p release && cp android/app/build/outputs/apk/debug/app-debug.apk release/Flickora-v2.0.3-debug.apk",
-    "build:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease bundleRelease && cd .. && mkdir -p release && cp android/app/build/outputs/apk/release/app-release.apk release/Flickora-v2.0.3.apk && cp android/app/build/outputs/bundle/release/app-release.aab release/Flickora-v2.0.3.aab",
+    "build:apk": "npm run build && npx cap sync android && cd android && ./gradlew assembleDebug && cd .. && mkdir -p release && cp android/app/build/outputs/apk/debug/app-debug.apk release/Flickora-v2.0.4-debug.apk",
+    "build:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease bundleRelease && cd .. && mkdir -p release && cp android/app/build/outputs/apk/release/app-release.apk release/Flickora-v2.0.4.apk && cp android/app/build/outputs/bundle/release/app-release.aab release/Flickora-v2.0.4.aab",
     "build:apk:release": "npm run build:release"
   },
   "dependencies": {

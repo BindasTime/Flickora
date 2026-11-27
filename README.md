@@ -61,7 +61,7 @@ No account. No tracking. Everything stays on your device.
 
 Download the latest APK directly from [GitHub Releases](https://github.com/BindasTime/Flickora-Mobile/releases/latest):
 
-1. Download `Flickora-v2.0.3.apk`
+1. Download `Flickora-v2.0.4.apk`
 2. On your Android device go to **Settings → Install unknown apps** and allow your browser
 3. Open the downloaded file and tap **Install**
 
@@ -105,8 +105,8 @@ npm run build:apk
 npm run build:release
 ```
 
-Signed artifacts land in `release/Flickora-v2.0.3.apk` and
-`release/Flickora-v2.0.3.aab`.
+Signed artifacts land in `release/Flickora-v2.0.4.apk` and
+`release/Flickora-v2.0.4.aab`.
 
 ### Development Server
 
