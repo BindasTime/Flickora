@@ -1,13 +1,13 @@
-# Release checklist — Flickora 2.0.1
+# Release checklist — Flickora 2.0.2
 
 ## Version
 
-- `package.json` / `package-lock.json`: `2.0.1`
+- `package.json` / `package-lock.json`: `2.0.2`
 - Android `versionCode`: `3`
-- Android `versionName`: `2.0.1`
+- Android `versionName`: `2.0.2`
 - Signed outputs:
-  - `release/Flickora-v2.0.1.apk`
-  - `release/Flickora-v2.0.1.aab`
+  - `release/Flickora-v2.0.2.apk`
+  - `release/Flickora-v2.0.2.aab`
 
 ## Signing
 
@@ -68,5 +68,5 @@ app is approved, set it to `false`, rebuild, and smoke-test again.
 Use the account that owns `BindasTime/Flickora` (the `Flickora-Mobile` URL
 redirects here). Attach:
 
-- `release/Flickora-v2.0.1.apk`
-- `release/Flickora-v2.0.1.aab` (optional, for stores)
+- `release/Flickora-v2.0.2.apk`
+- `release/Flickora-v2.0.2.aab` (optional, for stores)

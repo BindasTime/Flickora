@@ -9,7 +9,9 @@ export function MobileHeader() {
   const navigate = useNavigate();
   const { offline } = useApp();
   const headerRef = useRef<HTMLElement | null>(null);
+  const lastScrollY = useRef(0);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   const isSubPage =
     location.pathname.startsWith('/title/') ||
@@ -19,14 +21,36 @@ export function MobileHeader() {
   useEffect(() => {
     const scroller = headerRef.current?.closest('.mobile-main-scroll');
     if (!scroller) return;
-    const onScroll = () => setScrolled(scroller.scrollTop > 8);
+    lastScrollY.current = scroller.scrollTop;
+    const onScroll = () => {
+      const y = scroller.scrollTop;
+      const delta = y - lastScrollY.current;
+      setScrolled(y > 8);
+
+      // Hide only after a deliberate downward gesture; reveal immediately on
+      // any upward gesture, at the top, or when the route changes below.
+      if (y < 56) setHidden(false);
+      else if (y > 120 && delta > 6) setHidden(true);
+      else if (delta < -6) setHidden(false);
+
+      if (Math.abs(delta) > 6 || y < 56) lastScrollY.current = y;
+    };
     scroller.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     return () => scroller.removeEventListener('scroll', onScroll);
   }, []);
 
+  useEffect(() => {
+    lastScrollY.current = 0;
+    setHidden(false);
+  }, [location.pathname]);
+
   return (
-    <header className={`mobile-header${scrolled ? ' scrolled' : ''}`} ref={headerRef}>
+    <header
+      className={`mobile-header${scrolled ? ' scrolled' : ''}${hidden ? ' is-hidden' : ''}`}
+      ref={headerRef}
+      onFocusCapture={() => setHidden(false)}
+    >
       <div className="mobile-header-left">
         {isSubPage ? (
           <div className="mobile-subpage-header">

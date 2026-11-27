@@ -56,8 +56,14 @@
   background: transparent;
   border-bottom: 1px solid transparent;
   transition:
+    transform 300ms var(--motion-emphasized),
     background-color var(--duration-medium) var(--motion-standard),
     border-color var(--duration-medium) var(--motion-standard);
+  will-change: transform;
+}
+
+.mobile-header.is-hidden {
+  transform: translateY(-105%);
 }
 
 .mobile-header.scrolled {
